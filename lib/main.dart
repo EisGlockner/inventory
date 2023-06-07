@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inventory/bloc/player_overview_bloc.dart';
 import 'package:inventory/player_overview.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,9 +18,11 @@ class MyApp extends StatelessWidget {
             _initializeDatabase();
           }
         },
-        child: const MaterialApp(
-          title: 'Your App',
-          home: PlayerOverview(),
+        child: BlocProvider(
+          create: (context) => PlayerOverviewBloc()..add(LoadPlayers()),
+          child: MaterialApp(
+            home: PlayerOverview(),
+          ),
         ),
       ),
     );

@@ -52,6 +52,16 @@ class DBHelper {
     }
   }
 
+  Future<Database> _openDatabase() async {
+    var databasesPath = await getDatabasesPath();
+    var path = join(databasesPath, _databaseName);
+    return await openDatabase(path);
+  }
+
+  Future<void> _closeDatabase(Database db) async {
+    await db.close();
+  }
+
   // insert data into the spieler table
   Future<int?> insertSpieler(Spieler spieler) async {
     Database? db = await instance.database;
@@ -83,74 +93,104 @@ class DBHelper {
 
   // Füge eine neue Gruppe hinzu
   Future<int?> insertGruppe(String name) async {
-    Database? db = await instance.database;
-    return await db?.insert('gruppen', {'name': name});
+    Database db = await _openDatabase();
+    int? result = await db.insert('gruppen', {'name': name});
+    print(result);
+    await _closeDatabase(db);
+    return result;
   }
 
   // Füge einen Spieler zu einer Gruppe hinzu
-  Future<int?> addSpielerToGruppe(int spielerId, int gruppenId) async {
+  Future<int?> insertSpielerToGruppe(int spielerId, int gruppenId) async {
     Database? db = await instance.database;
     return await db?.insert('spieler_gruppen', {'spielerId': spielerId, 'gruppenId': gruppenId});
   }
 
-  // get data from the spieler table
+// get data from the spieler table
   Future<List<Spieler>> getSpieler() async {
     Database? db = await instance.database;
     List<Map>? maps = (await db?.query('spieler'))?.cast<Map>();
-    return List.generate(maps!.length, (i) {
-      return Spieler.fromMap(Map<String, dynamic>.from(maps[i]));
-    });
+    if (maps != null) {
+      return List.generate(maps.length, (i) {
+        return Spieler.fromMap(Map<String, dynamic>.from(maps[i]));
+      });
+    } else {
+      return [];
+    }
   }
 
   // get data from the stats table
   Future<List<Stats>> getStats() async {
     Database? db = await instance.database;
     List<Map>? maps = (await db?.query('stats'))?.cast<Map>();
-    return List.generate(maps!.length, (i) {
-      return Stats.fromMap(Map<String, dynamic>.from(maps[i]));
-    });
+    if (maps != null) {
+      return List.generate(maps.length, (i) {
+        return Stats.fromMap(Map<String, dynamic>.from(maps[i]));
+      });
+    } else {
+      return [];
+    }
   }
 
   // get data from the spieler_stats table
   Future<List<SpielerStats>> getSpielerStats() async {
     Database? db = await instance.database;
     List<Map>? maps = (await db?.query('spieler_stats'))?.cast<Map>();
-    return List.generate(maps!.length, (i) {
-      return SpielerStats.fromMap(Map<String, dynamic>.from(maps[i]));
-    });
+    if (maps != null) {
+      return List.generate(maps.length, (i) {
+        return SpielerStats.fromMap(Map<String, dynamic>.from(maps[i]));
+      });
+    } else {
+      return [];
+    }
   }
 
   // get data from the fertigkeiten table
   Future<List<Fertigkeiten>> getFertigkeiten() async {
     Database? db = await instance.database;
     List<Map>? maps = (await db?.query('fertigkeiten'))?.cast<Map>();
-    return List.generate(maps!.length, (i) {
-      return Fertigkeiten.fromMap(Map<String, dynamic>.from(maps[i]));
-    });
+    if (maps != null) {
+      return List.generate(maps.length, (i) {
+        return Fertigkeiten.fromMap(Map<String, dynamic>.from(maps[i]));
+      });
+    } else {
+      return [];
+    }
   }
 
   // get data from the fertigkeiten_stats table
   Future<List<FertigkeitenStats>> getFertigkeitenStats() async {
     Database? db = await instance.database;
     List<Map>? maps = (await db?.query('fertigkeiten_stats'))?.cast<Map>();
-    return List.generate(maps!.length, (i) {
-      return FertigkeitenStats.fromMap(Map<String, dynamic>.from(maps[i]));
-    });
+    if (maps != null) {
+      return List.generate(maps.length, (i) {
+        return FertigkeitenStats.fromMap(Map<String, dynamic>.from(maps[i]));
+      });
+    } else {
+      return [];
+    }
   }
 
   // get data from the spieler_fertigkeiten table
   Future<List<SpielerFertigkeiten>> getSpielerFertigkeiten() async {
     Database? db = await instance.database;
     List<Map>? maps = (await db?.query('spieler_fertigkeiten'))?.cast<Map>();
-    return List.generate(maps!.length, (i) {
-      return SpielerFertigkeiten.fromMap(Map<String, dynamic>.from(maps[i]));
-    });
+    if (maps != null) {
+      return List.generate(maps.length, (i) {
+        return SpielerFertigkeiten.fromMap(Map<String, dynamic>.from(maps[i]));
+      });
+    } else {
+      return [];
+    }
   }
 
   // Hole alle Gruppen
   Future<List<Map<String, dynamic>>?> getGruppen() async {
-    Database? db = await instance.database;
-    return await db?.query('gruppen');
+    Database db = await _openDatabase();
+    var result = await db.query('gruppen');
+    await _closeDatabase(db);
+
+    return result;
   }
 
   // Hole alle Spieler in einer Gruppe
