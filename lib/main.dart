@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       create: (context) => AppBloc()..add(AppStartedEvent()),
       child: BlocListener<AppBloc, AppState>(
         listener: (context, state) {
-          if (state is AppStartedState) {
+          if (state is AppStarted) {
             _initializeDatabase();
           }
         },
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
 class AppBloc extends Bloc<AppEvent, AppState> {
   AppBloc() : super(AppInitial()) {
     on<AppStartedEvent>((event, emit) {
-      emit(AppStartedState());
+      emit(AppStarted());
     });
   }
 }
@@ -45,7 +45,7 @@ abstract class AppState {}
 
 class AppInitial extends AppState {}
 
-class AppStartedState extends AppState {}
+class AppStarted extends AppState {}
 
 abstract class AppEvent {}
 

@@ -177,10 +177,11 @@ class SpielerFertigkeiten {
   final int fertigkeitId;
   final int wert;
 
-  SpielerFertigkeiten(
-      {required this.spielerId,
-      required this.fertigkeitId,
-      required this.wert});
+  SpielerFertigkeiten({
+    required this.spielerId,
+    required this.fertigkeitId,
+    required this.wert,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -195,6 +196,54 @@ class SpielerFertigkeiten {
       spielerId: map['spieler_id'],
       fertigkeitId: map['fertigkeit_id'],
       wert: map['wert'],
+    );
+  }
+}
+
+class Gruppen {
+  final int id;
+  final String name;
+
+  Gruppen({
+    required this.id,
+    required this.name,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+    };
+  }
+
+  factory Gruppen.fromMap(Map<String, dynamic> map) {
+    return Gruppen(
+      id: map['id'],
+      name: map['name'],
+    );
+  }
+}
+
+class SpielerGruppen {
+  final int spielerId;
+  final int gruppenId;
+
+  SpielerGruppen({
+    required this.spielerId,
+    required this.gruppenId,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'spielerId': spielerId,
+      'gruppenId': gruppenId,
+    };
+  }
+
+  factory SpielerGruppen.fromMap(Map<String, dynamic> map) {
+    return SpielerGruppen(
+      spielerId: map['spielerId'],
+      gruppenId: map['gruppenId'],
     );
   }
 }

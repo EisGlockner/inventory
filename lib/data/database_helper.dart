@@ -26,29 +26,22 @@ class DBHelper {
     var databasesPath = await getDatabasesPath();
     var path = join(databasesPath, _databaseName);
 
-    // Check if the database exists
     var exists = await databaseExists(path);
 
     if (!exists) {
-// Should happen only the first time you launch your application
       print("Creating new copy from asset");
 
-// Make sure the parent directory exists
       try {
         await Directory(dirname(path)).create(recursive: true);
       } catch (_) {}
 
-// Copy from asset
       ByteData data = await rootBundle.load(join("assets", "inventoryDB.db"));
       List<int> bytes =
-      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
-// Write and flush the bytes written
       await File(path).writeAsBytes(bytes, flush: true);
     } else {
       print("Opening existing database");
-      var db = await openDatabase(path, readOnly: true);
-      await db.close();
     }
   }
 
@@ -64,53 +57,72 @@ class DBHelper {
 
   // insert data into the spieler table
   Future<int?> insertSpieler(Spieler spieler) async {
-    Database? db = await instance.database;
-    return await db?.insert('spieler', spieler.toMap());
+    Database? db = await _openDatabase();
+    var result = await db.insert('spieler', spieler.toMap()).then((_) {
+      _closeDatabase(db);
+    });
+    return result;
   }
 
   // insert data into the spieler_stats table
   Future<int?> insertSpielerStats(SpielerStats spielerStats) async {
-    Database? db = await instance.database;
-    return await db?.insert('spieler_stats', spielerStats.toMap());
+    Database? db = await _openDatabase();
+    var result =
+        await db.insert('spieler_stats', spielerStats.toMap()).then((_) {
+      _closeDatabase(db);
+    });
+    return result;
   }
 
   // insert data into the spieler_fertigkeiten table
   Future<int?> insertSpielerFertigkeiten(
       SpielerFertigkeiten spielerFertigkeiten) async {
-    Database? db = await instance.database;
-    return await db?.insert('spieler_fertigkeiten', spielerFertigkeiten.toMap());
+    Database? db = await _openDatabase();
+    var result = await db
+        .insert('spieler_fertigkeiten', spielerFertigkeiten.toMap())
+        .then((_) {
+      _closeDatabase(db);
+    });
+    return result;
   }
 
   // insert data into the spieler and spieler_stats table. Both have to be completed or the transaction fails
-  Future<void> insertSpielerAndSpielerStats(Spieler spieler,
-      SpielerStats spielerStats) async {
-    Database? db = await instance.database;
-    await db?.transaction((txn) async {
+  Future<int?> insertSpielerAndSpielerStats(
+      Spieler spieler, SpielerStats spielerStats) async {
+    Database? db = await _openDatabase();
+    var result = await db.transaction((txn) async {
       await txn.insert('spieler', spieler.toMap());
       await txn.insert('spieler_stats', spielerStats.toMap());
+    }).then((_) {
+      _closeDatabase(db);
     });
+    return result;
   }
 
   // Füge eine neue Gruppe hinzu
   Future<int?> insertGruppe(String name) async {
     Database db = await _openDatabase();
     int? result = await db.insert('gruppen', {'name': name});
-    print(result);
-    await _closeDatabase(db);
+    _closeDatabase(db);
     return result;
   }
 
   // Füge einen Spieler zu einer Gruppe hinzu
   Future<int?> insertSpielerToGruppe(int spielerId, int gruppenId) async {
-    Database? db = await instance.database;
-    return await db?.insert('spieler_gruppen', {'spielerId': spielerId, 'gruppenId': gruppenId});
+    Database? db = await _openDatabase();
+    var result = await db.insert('spieler_gruppen',
+        {'spielerId': spielerId, 'gruppenId': gruppenId}).then((_) {
+      _closeDatabase(db);
+    });
+    return result;
   }
 
 // get data from the spieler table
   Future<List<Spieler>> getSpieler() async {
-    Database? db = await instance.database;
-    List<Map>? maps = (await db?.query('spieler'))?.cast<Map>();
-    if (maps != null) {
+    Database? db = await _openDatabase();
+    List<Map>? maps = (await db.query('spieler')).cast<Map>();
+    await _closeDatabase(db);
+    if (maps.isNotEmpty) {
       return List.generate(maps.length, (i) {
         return Spieler.fromMap(Map<String, dynamic>.from(maps[i]));
       });
@@ -121,9 +133,10 @@ class DBHelper {
 
   // get data from the stats table
   Future<List<Stats>> getStats() async {
-    Database? db = await instance.database;
-    List<Map>? maps = (await db?.query('stats'))?.cast<Map>();
-    if (maps != null) {
+    Database? db = await _openDatabase();
+    List<Map>? maps = (await db.query('stats')).cast<Map>();
+    await _closeDatabase(db);
+    if (maps.isNotEmpty) {
       return List.generate(maps.length, (i) {
         return Stats.fromMap(Map<String, dynamic>.from(maps[i]));
       });
@@ -134,9 +147,10 @@ class DBHelper {
 
   // get data from the spieler_stats table
   Future<List<SpielerStats>> getSpielerStats() async {
-    Database? db = await instance.database;
-    List<Map>? maps = (await db?.query('spieler_stats'))?.cast<Map>();
-    if (maps != null) {
+    Database? db = await _openDatabase();
+    List<Map>? maps = (await db.query('spieler_stats')).cast<Map>();
+    await _closeDatabase(db);
+    if (maps.isNotEmpty) {
       return List.generate(maps.length, (i) {
         return SpielerStats.fromMap(Map<String, dynamic>.from(maps[i]));
       });
@@ -147,9 +161,10 @@ class DBHelper {
 
   // get data from the fertigkeiten table
   Future<List<Fertigkeiten>> getFertigkeiten() async {
-    Database? db = await instance.database;
-    List<Map>? maps = (await db?.query('fertigkeiten'))?.cast<Map>();
-    if (maps != null) {
+    Database? db = await _openDatabase();
+    List<Map>? maps = (await db.query('fertigkeiten')).cast<Map>();
+    await _closeDatabase(db);
+    if (maps.isNotEmpty) {
       return List.generate(maps.length, (i) {
         return Fertigkeiten.fromMap(Map<String, dynamic>.from(maps[i]));
       });
@@ -160,9 +175,10 @@ class DBHelper {
 
   // get data from the fertigkeiten_stats table
   Future<List<FertigkeitenStats>> getFertigkeitenStats() async {
-    Database? db = await instance.database;
-    List<Map>? maps = (await db?.query('fertigkeiten_stats'))?.cast<Map>();
-    if (maps != null) {
+    Database? db = await _openDatabase();
+    List<Map>? maps = (await db.query('fertigkeiten_stats')).cast<Map>();
+    await _closeDatabase(db);
+    if (maps.isNotEmpty) {
       return List.generate(maps.length, (i) {
         return FertigkeitenStats.fromMap(Map<String, dynamic>.from(maps[i]));
       });
@@ -173,9 +189,10 @@ class DBHelper {
 
   // get data from the spieler_fertigkeiten table
   Future<List<SpielerFertigkeiten>> getSpielerFertigkeiten() async {
-    Database? db = await instance.database;
-    List<Map>? maps = (await db?.query('spieler_fertigkeiten'))?.cast<Map>();
-    if (maps != null) {
+    Database? db = await _openDatabase();
+    List<Map>? maps = (await db.query('spieler_fertigkeiten')).cast<Map>();
+    await _closeDatabase(db);
+    if (maps.isNotEmpty) {
       return List.generate(maps.length, (i) {
         return SpielerFertigkeiten.fromMap(Map<String, dynamic>.from(maps[i]));
       });
@@ -185,103 +202,177 @@ class DBHelper {
   }
 
   // Hole alle Gruppen
-  Future<List<Map<String, dynamic>>?> getGruppen() async {
+  Future<List<Gruppen>> getGruppen() async {
     Database db = await _openDatabase();
-    var result = await db.query('gruppen');
+    var maps = (await db.query('gruppen')).cast<Map>();
+    await _closeDatabase(db);
+    if (maps.isNotEmpty) {
+      return List.generate(maps.length, (i) {
+        return Gruppen.fromMap(Map<String, dynamic>.from(maps[i]));
+      });
+    } else {
+      return [];
+    }
+  }
+
+  // Hole den ersten Entry in Gruppen
+  Future<int?> getFirstGroupId() async {
+    Database db = await _openDatabase();
+    var result = await db.query('gruppen', orderBy: 'id DESC', limit: 1);
     await _closeDatabase(db);
 
-    return result;
+    if (result.isNotEmpty) {
+      return result.first['id'] as int?;
+    } else {
+      return null;
+    }
+  }
+
+  Future<String?> getGruppenName(int id) async {
+    Database db = await _openDatabase();
+    List<Map<String, dynamic>> result = await db.query('gruppen',
+        columns: ['name'], where: 'id = ?', whereArgs: [id]);
+    await _closeDatabase(db);
+    if (result.isNotEmpty) {
+      return result.first['name'] as String;
+    } else {
+      return null;
+    }
   }
 
   // Hole alle Spieler in einer Gruppe
   Future<List<Map<String, dynamic>>?> getSpielerInGruppe(int gruppenId) async {
-    Database? db = await instance.database;
-    return await db?.query('spieler_gruppen', where: 'gruppenId = ?', whereArgs: [gruppenId]);
+    Database? db = await _openDatabase();
+    var result = await db.query('spieler_gruppen',
+        where: 'gruppenId = ?', whereArgs: [gruppenId]);
+    await _closeDatabase(db);
+    return result;
   }
 
   // delete data from the spieler table
   Future<int?> deleteSpieler(int id) async {
-    Database? db = await instance.database;
-    return await db?.delete('spieler', where: 'id = ?', whereArgs: [id]);
+    Database? db = await _openDatabase();
+    var result =
+        await db.delete('spieler', where: 'id = ?', whereArgs: [id]).then((_) {
+      _closeDatabase(db);
+    });
+    return result;
   }
 
 // delete data from the spieler_stats table
   Future<int?> deleteSpielerStats(int spielerId) async {
-    Database? db = await instance.database;
-    return await db?.delete(
-        'spieler_stats', where: 'spielerId = ?', whereArgs: [spielerId]);
+    Database? db = await _openDatabase();
+    var result = await db.delete('spieler_stats',
+        where: 'spielerId = ?', whereArgs: [spielerId]).then((_) {
+      _closeDatabase(db);
+    });
+    return result;
   }
 
 // delete data from the spieler_fertigkeiten table
   Future<int?> deleteSpielerFertigkeiten(int spielerId) async {
-    Database? db = await instance.database;
-    return await db?.delete(
-        'spieler_fertigkeiten', where: 'spielerId = ?', whereArgs: [spielerId]);
+    Database? db = await _openDatabase();
+    var result = await db.delete('spieler_fertigkeiten',
+        where: 'spielerId = ?', whereArgs: [spielerId]).then((_) {
+      _closeDatabase(db);
+    });
+    return result;
   }
 
   // Lösche eine Gruppe
   Future<int?> deleteGruppe(int id) async {
-    Database? db = await instance.database;
-    return await db?.delete('gruppen', where: 'id = ?', whereArgs: [id]);
+    Database? db = await _openDatabase();
+    int? result;
+    try {
+      result = await db.transaction((txn) async {
+        await txn.delete('gruppen', where: 'id = ?', whereArgs: [id]);
+        await txn
+            .delete('spieler_gruppen', where: 'gruppenId = ?', whereArgs: [id]);
+      }).then((_) {
+        _closeDatabase(db);
+        return null;
+      });
+    } on DatabaseException catch (e) {
+      print(e.toString());
+    }
+    return result;
   }
 
   // Entferne einen Spieler aus einer Gruppe
-  Future<int?> removeSpielerFromGruppe(int spielerId, int gruppenId) async {
-    Database? db = await instance.database;
-    return await db?.delete('spieler_gruppen', where: 'spielerId = ? AND gruppenId = ?', whereArgs: [spielerId, gruppenId]);
+  Future<int?> deleteSpielerFromGruppe(int spielerId, int gruppenId) async {
+    Database? db = await _openDatabase();
+    var result = await db.delete('spieler_gruppen',
+        where: 'spielerId = ? AND gruppenId = ?',
+        whereArgs: [spielerId, gruppenId]).then((_) {
+      _closeDatabase(db);
+    });
+    return result;
   }
 
 // update data in the spieler table
   Future<int?> updateSpieler(Spieler spieler) async {
-    Database? db = await instance.database;
-    return await db?.update(
-        'spieler', spieler.toMap(), where: 'id = ?', whereArgs: [spieler.id]);
+    Database? db = await _openDatabase();
+    var result = await db.update('spieler', spieler.toMap(),
+        where: 'id = ?', whereArgs: [spieler.id]).then((_) {
+      _closeDatabase(db);
+    });
+    return result;
   }
 
 // update data in the spieler_stats table
   Future<int?> updateSpielerStats(SpielerStats spielerStats) async {
-    Database? db = await instance.database;
-    return await db?.update('spieler_stats', spielerStats.toMap(),
+    Database? db = await _openDatabase();
+    var result = await db.update('spieler_stats', spielerStats.toMap(),
         where: 'spielerId = ? AND statId = ?',
-        whereArgs: [spielerStats.spielerId, spielerStats.statId]);
+        whereArgs: [spielerStats.spielerId, spielerStats.statId]).then((_) {
+      _closeDatabase(db);
+    });
+    return result;
   }
 
 // update data in the spieler_fertigkeiten table
   Future<int?> updateSpielerFertigkeiten(
       SpielerFertigkeiten spielerFertigkeiten) async {
-    Database? db = await instance.database;
-    return await db?.update('spieler_fertigkeiten', spielerFertigkeiten.toMap(),
+    Database? db = await _openDatabase();
+    var result = await db.update(
+        'spieler_fertigkeiten', spielerFertigkeiten.toMap(),
         where: 'spielerId = ? AND fertigkeitId = ?',
         whereArgs: [
           spielerFertigkeiten.spielerId,
           spielerFertigkeiten.fertigkeitId
-        ]);
+        ]).then((_) {
+      _closeDatabase(db);
+    });
+    return result;
   }
 
   // Aktualisiere eine Gruppe
   Future<int?> updateGruppe(int id, String name) async {
-    Database? db = await instance.database;
-    return await db?.update('gruppen', {'name': name}, where: 'id = ?', whereArgs: [id]);
+    Database? db = await _openDatabase();
+    var result = await db
+        .update('gruppen', {'name': name}, where: 'id = ?', whereArgs: [id])
+        .then((_) {
+      _closeDatabase(db);
+    });
+    return result;
   }
 }
 
-
 // // insert data into the stats table
 // Future<int> insertStats(Stats stats) async {
-//   Database db = await instance.database;
+//   Database db = await _openDatabase(;
 //   return await db.insert('stats', stats.toMap());
 // }
 
-
 // // insert data into the fertigkeiten table
 // Future<int> insertFertigkeiten(Fertigkeiten fertigkeiten) async {
-//   Database db = await instance.database;
+//   Database db = await _openDatabase(;
 //   return await db.insert('fertigkeiten', fertigkeiten.toMap());
 // }
 
 // // insert data into the fertigkeiten_stats table
 // Future<int> insertFertigkeitenStats(
 //     FertigkeitenStats fertigkeitenStats) async {
-//   Database db = await instance.database;
+//   Database db = await _openDatabase(;
 //   return await db.insert('fertigkeiten_stats', fertigkeitenStats.toMap());
 // }

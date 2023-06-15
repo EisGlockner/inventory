@@ -9,7 +9,6 @@ class PlayerOverviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Hier kannst du die Spielerdaten anzeigen
     return Text(player.name);
   }
 }
