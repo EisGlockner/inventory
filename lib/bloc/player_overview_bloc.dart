@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory/bloc/player_overview_events.dart';
+import 'package:inventory/bloc/player_overview_states.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/database_helper.dart';
@@ -28,7 +30,6 @@ class PlayerOverviewBloc
     });
 
     on<AddGroup>((event, emit) async {
-      emit(InsertingGroup());
       try {
         int? groupId = await DBHelper.instance.insertGruppe(event.name);
 
@@ -44,25 +45,15 @@ class PlayerOverviewBloc
     });
 
     on<DeleteGroup>((event, emit) async {
-      emit(DeletingGroup());
       try {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         int? lastGroup = prefs.getInt('lastGroup');
-        await DBHelper.instance.deleteGruppe(lastGroup!);
+        lastGroup = lastGroup ?? 0;
+        await DBHelper.instance.deleteGruppe(lastGroup);
         int? firstGroup = await DBHelper.instance.getFirstGroupId();
-        await prefs.setInt('lastGroup', firstGroup!);
+        firstGroup = firstGroup ?? 0;
+        await prefs.setInt('lastGroup', firstGroup);
         emit(GroupDeleted());
-      } catch (e) {
-        print(e);
-        emit(PlayerOverviewError());
-      }
-    });
-
-    on <LoadGroup>((event, emit) async {
-      try {
-        emit(GroupLoading());
-        List<Gruppen> gruppen = await DBHelper.instance.getGruppen();
-        emit(GroupLoaded(gruppen));
       } catch (e) {
         print(e);
         emit(PlayerOverviewError());
@@ -70,49 +61,3 @@ class PlayerOverviewBloc
     });
   }
 }
-
-abstract class PlayerOverviewState {}
-
-class PlayerOverviewInitial extends PlayerOverviewState {}
-
-class PlayerOverviewLoading extends PlayerOverviewState {}
-
-class PlayerOverviewLoaded extends PlayerOverviewState {
-  final List<Spieler> players;
-  final String? groupName;
-  final List<Gruppen> groups;
-
-  PlayerOverviewLoaded(this.players, this.groupName, this.groups);
-}
-
-class PlayerOverviewError extends PlayerOverviewState {}
-
-class InsertingGroup extends PlayerOverviewState {}
-
-class GroupAdded extends PlayerOverviewState {}
-
-class DeletingGroup extends PlayerOverviewState {}
-
-class GroupDeleted extends PlayerOverviewState {}
-
-class GroupLoading extends PlayerOverviewState {}
-
-class GroupLoaded extends PlayerOverviewState {
-  final List<Gruppen> gruppen;
-
-  GroupLoaded(this.gruppen);
-}
-
-abstract class PlayerOverviewEvent {}
-
-class LoadPlayers extends PlayerOverviewEvent {}
-
-class AddGroup extends PlayerOverviewEvent {
-  final String name;
-
-  AddGroup(this.name);
-}
-
-class DeleteGroup extends PlayerOverviewEvent {}
-
-class LoadGroup extends PlayerOverviewEvent {}

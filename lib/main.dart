@@ -3,6 +3,8 @@ import 'package:inventory/bloc/player_overview_bloc.dart';
 import 'package:inventory/player_overview.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'bloc/player_overview_events.dart';
+import 'bloc/player_overview_states.dart';
 import 'data/database_helper.dart';
 
 void main() => runApp(MyApp());
@@ -20,8 +22,15 @@ class MyApp extends StatelessWidget {
         },
         child: BlocProvider(
           create: (context) => PlayerOverviewBloc()..add(LoadPlayers()),
-          child: MaterialApp(
-            home: PlayerOverview(),
+          child: BlocListener<PlayerOverviewBloc, PlayerOverviewState>(
+            listener: (context, state) {
+              if (state is GroupAdded || state is GroupDeleted) {
+                context.read<PlayerOverviewBloc>().add(LoadPlayers());
+              }
+            },
+            child: MaterialApp(
+              home: PlayerOverview(),
+            ),
           ),
         ),
       ),

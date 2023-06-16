@@ -252,10 +252,8 @@ class DBHelper {
   // delete data from the spieler table
   Future<int?> deleteSpieler(int id) async {
     Database? db = await _openDatabase();
-    var result =
-        await db.delete('spieler', where: 'id = ?', whereArgs: [id]).then((_) {
-      _closeDatabase(db);
-    });
+    var result = await db.delete('spieler', where: 'id = ?', whereArgs: [id]);
+    _closeDatabase(db);
     return result;
   }
 

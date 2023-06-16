@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory/bloc/player_overview_states.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../bloc/player_overview_bloc.dart';
+import '../bloc/player_overview_events.dart';
 
 class MyAppBar extends StatelessWidget {
   const MyAppBar({super.key});
@@ -58,77 +61,65 @@ class MyAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => PlayerOverviewBloc(),
-      child: BlocListener<PlayerOverviewBloc, PlayerOverviewState>(
-        listener: (context, state) {
-          if (state is GroupAdded || state is GroupDeleted) {
-            context.read<PlayerOverviewBloc>().add(LoadPlayers());
-          }
-        },
-        child: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          actions: [
-            IconButton(
-              onPressed: () {
-                _deleteGroup(context);
-              },
-              icon: const Icon(Icons.delete),
-            ),
-            Theme(
-              data: Theme.of(context).copyWith(cardColor: Colors.grey.shade400),
-              child: PopupMenuButton<String>(
-                onSelected: (value) {
-                  if (value == 'new_group') {
-                    _addGroup(context);
-                  } else {
-                    // implement Group selection
-                  }
-                },
-                itemBuilder: (BuildContext context) => [
-                  const PopupMenuItem(
-                    value: 'new_group',
-                    child: Text('Neue Gruppe hinzufügen'),
-                  ),
-                  PopupMenuItem(
-                    enabled: false,
-                    child: BlocBuilder<PlayerOverviewBloc, PlayerOverviewState>(
-                      builder: (context, state) {
-                        if (state is LoadGroup) {
-                          return const CircularProgressIndicator();
-                        } else if (state is GroupLoaded) {
-                          if (state.gruppen.isNotEmpty) {
-                            return Column(
-                              children: state.gruppen
-                                  .map((group) => PopupMenuItem(
-                                        value: group,
-                                        child: Text(group.name),
-                                      ))
-                                  .toList(),
-                            );
-                          } else {
-                            return const Text('Keine Gruppen vorhanden');
-                          }
-                        } else {
-                          return const Text('Fehler beim Laden der Gruppen');
-                        }
-                      },
-                    ),
-                  ),
-                ],
-                icon: const Icon(Icons.group, color: Colors.white),
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.person_add),
-              onPressed: () {
-                // implement player
-              },
-            ),
-          ],
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      actions: [
+        IconButton(
+          onPressed: () {
+            _deleteGroup(context);
+          },
+          icon: const Icon(Icons.delete),
         ),
-      ),
+        Theme(
+          data: Theme.of(context).copyWith(cardColor: Colors.grey.shade400),
+          child: PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'new_group') {
+                _addGroup(context);
+              } else {
+                // implement Group selection
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem(
+                value: 'new_group',
+                child: Text('Neue Gruppe hinzufügen'),
+              ),
+              PopupMenuItem(
+                enabled: false,
+                child: BlocBuilder<PlayerOverviewBloc, PlayerOverviewState>(
+                  builder: (context, state) {
+                    if (state is PlayerOverviewLoaded) {
+                      if (state.groups.isNotEmpty) {
+                        return Column(
+                          children: state.groups
+                              .map((group) =>
+                              PopupMenuItem(
+                                value: group.id,
+                                child: Text(group.name),
+                              ))
+                              .toList(),
+                        );
+                      } else {
+                        return const Text('Keine Gruppen vorhanden');
+                      }
+                    }
+                    return AppBar();
+                  },
+                ),
+              ),
+            ],
+            icon: const Icon(Icons.group, color: Colors.white),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.person_add),
+          onPressed: () {
+            // implement player
+          },
+        ),
+      ],
     );
   }
 }
