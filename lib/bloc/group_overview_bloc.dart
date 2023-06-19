@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory/bloc/player_overview_events.dart';
-import 'package:inventory/bloc/player_overview_states.dart';
+import 'package:inventory/bloc/group_overview_events.dart';
+import 'package:inventory/bloc/group_overview_states.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/database_helper.dart';

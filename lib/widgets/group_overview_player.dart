@@ -1,15 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/model.dart';
+import '../bloc/group_overview_bloc.dart';
+import '../bloc/group_overview_states.dart';
 
-class PlayerOverviewWidget extends StatelessWidget {
-  final Spieler player;
+class GroupOverviewPlayer extends StatelessWidget {
 
-  PlayerOverviewWidget(this.player, {Key? key}) : super(key: key);
+  GroupOverviewPlayer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Text(player.name);
+    return BlocBuilder<PlayerOverviewBloc, PlayerOverviewState>(
+      builder: (context, state) {
+        if (state is PlayerOverviewLoading) {
+          return const CircularProgressIndicator(
+            color: Colors.grey,
+          );
+        } else if (state is PlayerOverviewLoaded) {
+          if (state.players.isNotEmpty) {
+            return Column(
+              children: state.players.map((player) =>
+              Text(player.name),
+              ).toList(),
+            );
+          } else {
+            return const Center(
+              child: Text(
+                'Keine Spieler vorhanden',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+            );
+          }
+        } else {
+          return const Text('Error');
+        }
+      },
+    );
   }
 }
 

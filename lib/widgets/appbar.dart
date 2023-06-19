@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory/bloc/player_overview_states.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:inventory/bloc/group_overview_states.dart';
 
-import '../bloc/player_overview_bloc.dart';
-import '../bloc/player_overview_events.dart';
+import '../bloc/group_overview_bloc.dart';
+import '../bloc/group_overview_events.dart';
 
 class MyAppBar extends StatelessWidget {
   const MyAppBar({super.key});
@@ -93,13 +92,12 @@ class MyAppBar extends StatelessWidget {
                     if (state is PlayerOverviewLoaded) {
                       if (state.groups.isNotEmpty) {
                         return Column(
-                          children: state.groups
-                              .map((group) =>
-                              PopupMenuItem(
-                                value: group.id,
-                                child: Text(group.name),
-                              ))
-                              .toList(),
+                          children: state.groups.map(
+                                (group) => PopupMenuItem(
+                                  value: group.id,
+                                  child: Text(group.name),
+                                ),
+                              ).toList(),
                         );
                       } else {
                         return const Text('Keine Gruppen vorhanden');

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory/widgets/appbar.dart';
-import 'package:inventory/widgets/player_overview_widget.dart';
+import 'package:inventory/widgets/group_overview_title.dart';
+import 'package:inventory/widgets/group_overview_player.dart';
 
-import 'bloc/player_overview_bloc.dart';
-import 'bloc/player_overview_states.dart';
 import 'misc.dart' as misc;
 
 class PlayerOverview extends StatelessWidget {
@@ -27,57 +25,13 @@ class PlayerOverview extends StatelessWidget {
         ),
         child: Column(
           children: [
-            BlocBuilder<PlayerOverviewBloc, PlayerOverviewState>(
-              builder: (context, state) {
-                if (state is PlayerOverviewLoading) {
-                  return const CircularProgressIndicator();
-                } else if (state is PlayerOverviewLoaded) {
-                  if (state.groupName != null) {
-                    return Center(
-                      child: Text(
-                        state.groupName!,
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w600),
-                      ),
-                    );
-                  } else {
-                    return const Center(
-                      child: Text(
-                        'Keine Gruppen vorhanden',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w600),
-                      ),
-                    );
-                  }
-                } else {
-                  return const Text('Error');
-                }
-              },
-            ),
+            const PlayerOverviewTitle(),
             const Padding(padding: EdgeInsets.only(bottom: 15)),
             const Divider(
               color: Colors.black,
               thickness: 1,
             ),
-            BlocBuilder<PlayerOverviewBloc, PlayerOverviewState>(
-              builder: (context, state) {
-                if (state is PlayerOverviewLoading) {
-                  return const CircularProgressIndicator();
-                } else if (state is PlayerOverviewLoaded) {
-                  if (state.players.isNotEmpty) {
-                    return Column(
-                      children: state.players
-                          .map((player) => PlayerOverviewWidget(player))
-                          .toList(),
-                    );
-                  } else {
-                    return const Text('Keine Spieler vorhanden');
-                  }
-                } else {
-                  return const Text('Error');
-                }
-              },
-            ),
+            GroupOverviewPlayer(),
           ],
         ),
       ),
@@ -86,7 +40,7 @@ class PlayerOverview extends StatelessWidget {
 }
 
 // import 'package:flutter/material.dart';
-// import 'package:inventory/widgets/player_overview_widget.dart';
+// import 'package:inventory/widgets/group_overview_player.dart';
 // import 'misc.dart' as misc;
 //
 // class PlayerOverview extends StatelessWidget {
