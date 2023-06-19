@@ -6,7 +6,7 @@ import '../bloc/group_overview_states.dart';
 
 class GroupOverviewPlayer extends StatelessWidget {
 
-  GroupOverviewPlayer({Key? key}) : super(key: key);
+  const GroupOverviewPlayer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

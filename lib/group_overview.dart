@@ -6,7 +6,7 @@ import 'package:inventory/widgets/group_overview_player.dart';
 import 'misc.dart' as misc;
 
 class PlayerOverview extends StatelessWidget {
-  PlayerOverview({Key? key}) : super(key: key);
+  const PlayerOverview({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +23,11 @@ class PlayerOverview extends StatelessWidget {
           misc.scrW(context, 0.04),
           0,
         ),
-        child: Column(
+        child: const Column(
           children: [
-            const PlayerOverviewTitle(),
-            const Padding(padding: EdgeInsets.only(bottom: 15)),
-            const Divider(
+            PlayerOverviewTitle(),
+            Padding(padding: EdgeInsets.only(bottom: 15)),
+            Divider(
               color: Colors.black,
               thickness: 1,
             ),

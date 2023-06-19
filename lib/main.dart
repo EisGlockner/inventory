@@ -7,9 +7,11 @@ import 'bloc/group_overview_events.dart';
 import 'bloc/group_overview_states.dart';
 import 'data/database_helper.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
                 context.read<PlayerOverviewBloc>().add(LoadPlayers());
               }
             },
-            child: MaterialApp(
+            child: const MaterialApp(
               home: PlayerOverview(),
             ),
           ),
