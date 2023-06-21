@@ -1,11 +1,11 @@
 class Spieler {
-  final int id;
+  final int? id;
   final String name;
   final int leben;
   final int mana;
   final int seelenkraft;
   final int zaehigkeit;
-  final int proviant;
+  final int? proviant;
   final int isGlaesern;
   final int isEisern;
   final int isZaeh;
@@ -14,13 +14,13 @@ class Spieler {
   final int hasKap;
 
   Spieler({
-    required this.id,
+    this.id,
     required this.name,
     required this.leben,
     required this.mana,
     required this.seelenkraft,
     required this.zaehigkeit,
-    required this.proviant,
+    this.proviant,
     required this.isGlaesern,
     required this.isEisern,
     required this.isZaeh,

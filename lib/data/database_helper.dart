@@ -64,12 +64,16 @@ class DBHelper {
   }
 
   // insert data into the spieler_stats table
-  Future<int?> insertSpielerStats(SpielerStats spielerStats) async {
+  Future<int?> insertSpielerStats(List<SpielerStats> spielerStatsList) async {
     Database? db = await _openDatabase();
-    var result =
-        await db.insert('spieler_stats', spielerStats.toMap()).then((_) {
-      _closeDatabase(db);
+    var result = await db.transaction((txn) async {
+      for(final spielerStats in spielerStatsList) {
+        await txn.insert('spieler_stats', spielerStats.toMap());
+      }
     });
+    //     await db.insert('spieler_stats', spielerStats.toMap()).then((_) {
+    //   _closeDatabase(db);
+    // });
     return result;
   }
 
