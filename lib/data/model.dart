@@ -89,7 +89,7 @@ class Stats {
 }
 
 class SpielerStats {
-  final int spielerId;
+  late int spielerId;
   final int statId;
   final int wert;
 

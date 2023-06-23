@@ -5,17 +5,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/database_helper.dart';
 import '../data/model.dart';
+import '../misc.dart';
 
-class PlayerOverviewBloc
+class GroupOverviewBloc
     extends Bloc<PlayerOverviewEvent, PlayerOverviewState> {
-  PlayerOverviewBloc() : super(PlayerOverviewInitial()) {
+  GroupOverviewBloc() : super(PlayerOverviewInitial()) {
     on<LoadPlayers>((event, emit) async {
       emit(PlayerOverviewLoading());
       try {
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        int? lastGroup = prefs.getInt('lastGroup');
+        int? lastGroup = prefs.getInt(currentGroup);
         List<Gruppen> groups = await DBHelper.instance.getGruppen();
-        List<Spieler> players = await DBHelper.instance.getSpieler();
+        List<Spieler> players = await DBHelper.instance.getSpielerInGruppen();
         String? groupName;
         if (lastGroup != null) {
           groupName = await DBHelper.instance.getGruppenName(lastGroup);
@@ -35,7 +36,7 @@ class PlayerOverviewBloc
 
         if (groupId != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setInt('lastGroup', groupId);
+          await prefs.setInt(currentGroup, groupId);
         }
         emit(GroupAdded());
       } catch (e) {
@@ -47,12 +48,12 @@ class PlayerOverviewBloc
     on<DeleteGroup>((event, emit) async {
       try {
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        int? lastGroup = prefs.getInt('lastGroup');
+        int? lastGroup = prefs.getInt(currentGroup);
         lastGroup = lastGroup ?? 0;
         await DBHelper.instance.deleteGruppe(lastGroup);
         int? firstGroup = await DBHelper.instance.getFirstGroupId();
         firstGroup = firstGroup ?? 0;
-        await prefs.setInt('lastGroup', firstGroup);
+        await prefs.setInt(currentGroup, firstGroup);
         emit(GroupDeleted());
       } catch (e) {
         print(e);

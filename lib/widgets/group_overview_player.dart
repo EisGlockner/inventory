@@ -10,7 +10,7 @@ class GroupOverviewPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PlayerOverviewBloc, PlayerOverviewState>(
+    return BlocBuilder<GroupOverviewBloc, PlayerOverviewState>(
       builder: (context, state) {
         if (state is PlayerOverviewLoading) {
           return const CircularProgressIndicator(
@@ -20,7 +20,7 @@ class GroupOverviewPlayer extends StatelessWidget {
           if (state.players.isNotEmpty) {
             return Column(
               children: state.players.map((player) =>
-              Text(player.name),
+                  Text(player.name),
               ).toList(),
             );
           } else {

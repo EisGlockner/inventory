@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/model.dart';
 import '../data/database_helper.dart';
@@ -12,7 +11,7 @@ class PlayerFormCubit extends Cubit<Map<String, dynamic>> {
     'mana': '',
     'seelenkraft': '',
     'zaehigkeit': '',
-    'proviant': 0,
+    'proviant': '0',
     'isGlaesern': false,
     'isEisern': false,
     'isZaeh': false,
@@ -20,14 +19,14 @@ class PlayerFormCubit extends Cubit<Map<String, dynamic>> {
     'hasAsp': false,
     'hasKap': false,
     'isLoading': false,
-    'MU': null,
-    'KL': null,
-    'IN': null,
-    'CH': null,
-    'FF': null,
-    'GE': null,
-    'KO': null,
-    'KK': null,
+    'MU': 8,
+    'KL': 8,
+    'IN': 8,
+    'CH': 8,
+    'FF': 8,
+    'GE': 8,
+    'KO': 8,
+    'KK': 8,
   });
 
   void updateField(String field, dynamic value) {
@@ -36,6 +35,7 @@ class PlayerFormCubit extends Cubit<Map<String, dynamic>> {
 
   Future<void> savePlayer() async {
     emit({...state, 'isLoading': true});
+
     final spieler = Spieler(
       name: state['name'],
       leben: int.parse(state['lep']),
@@ -43,63 +43,58 @@ class PlayerFormCubit extends Cubit<Map<String, dynamic>> {
       seelenkraft: int.parse(state['seelenkraft']),
       zaehigkeit: int.parse(state['zaehigkeit']),
       proviant: int.parse(state['proviant']),
-      isGlaesern: state['isGlaesern'],
-      isEisern: state['isEisern'],
-      isZaeh: state['isZaeh'],
-      isZerbrechlich: state['isZerbrechlich'],
-      hasAsp: state['hasAsp'],
-      hasKap: state['hasKap'],
+      isGlaesern: state['isGlaesern'] == false ? 0 : 1,
+      isEisern: state['isEisern'] == false ? 0 : 1,
+      isZaeh: state['isZaeh'] == false ? 0 : 1,
+      isZerbrechlich: state['isZerbrechlich'] == false ? 0 : 1,
+      hasAsp: state['hasAsp'] == false ? 0 : 1,
+      hasKap: state['hasKap'] == false ? 0 : 1,
     );
-    final spielerId = await DBHelper.instance.insertSpieler(spieler);
 
     final spielerStatsList = [
       SpielerStats(
-        spielerId: spielerId!,
+        spielerId: 0,
         statId: 1,
         wert: state['MU'],
       ),
       SpielerStats(
-        spielerId: spielerId,
+        spielerId: 0,
         statId: 2,
         wert: state['KL'],
       ),
       SpielerStats(
-        spielerId: spielerId,
+        spielerId: 0,
         statId: 3,
         wert: state['IN'],
       ),
       SpielerStats(
-        spielerId: spielerId,
+        spielerId: 0,
         statId: 4,
         wert: state['CH'],
       ),
       SpielerStats(
-        spielerId: spielerId,
+        spielerId: 0,
         statId: 5,
         wert: state['FF'],
       ),
       SpielerStats(
-        spielerId: spielerId,
+        spielerId: 0,
         statId: 6,
         wert: state['GE'],
       ),
       SpielerStats(
-        spielerId: spielerId,
+        spielerId: 0,
         statId: 7,
         wert: state['KO'],
       ),
       SpielerStats(
-        spielerId: spielerId,
+        spielerId: 0,
         statId: 8,
         wert: state['KK'],
       ),
     ];
-    await DBHelper.instance.insertSpielerStats(spielerStatsList);
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? lastGroup = prefs.getInt('lastGroup');
-
-    await DBHelper.instance.insertSpielerToGruppe(spielerId, lastGroup!);
+    DBHelper.instance.insertSpielerAndSpielerStats(spieler, spielerStatsList);
 
     emit({...state, 'isLoading': false});
   }

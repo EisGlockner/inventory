@@ -23,11 +23,11 @@ class MyApp extends StatelessWidget {
           }
         },
         child: BlocProvider(
-          create: (context) => PlayerOverviewBloc()..add(LoadPlayers()),
-          child: BlocListener<PlayerOverviewBloc, PlayerOverviewState>(
+          create: (context) => GroupOverviewBloc()..add(LoadPlayers()),
+          child: BlocListener<GroupOverviewBloc, PlayerOverviewState>(
             listener: (context, state) {
               if (state is GroupAdded || state is GroupDeleted) {
-                context.read<PlayerOverviewBloc>().add(LoadPlayers());
+                context.read<GroupOverviewBloc>().add(LoadPlayers());
               }
             },
             child: const MaterialApp(

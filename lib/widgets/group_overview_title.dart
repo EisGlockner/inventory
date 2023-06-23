@@ -9,7 +9,7 @@ class PlayerOverviewTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PlayerOverviewBloc, PlayerOverviewState>(
+    return BlocBuilder<GroupOverviewBloc, PlayerOverviewState>(
       builder: (context, state) {
         if (state is PlayerOverviewLoading) {
           return const CircularProgressIndicator(color: Colors.grey,);

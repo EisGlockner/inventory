@@ -7,3 +7,5 @@ double scrW(BuildContext context, num value) {
 double scrH(BuildContext context, num value) {
   return MediaQuery.of(context).size.height * value;
 }
+
+String currentGroup = 'currentGroup';

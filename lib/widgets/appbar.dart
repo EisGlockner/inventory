@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory/bloc/group_overview_states.dart';
 import 'package:inventory/bloc/player_form_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../bloc/group_overview_bloc.dart';
 import '../bloc/group_overview_events.dart';
-import '../data/model.dart';
+import '../misc.dart';
 
 class MyAppBar extends StatelessWidget {
   const MyAppBar({super.key});
@@ -28,7 +28,7 @@ class MyAppBar extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              context.read<PlayerOverviewBloc>().add(AddGroup(controller.text));
+              context.read<GroupOverviewBloc>().add(AddGroup(controller.text));
               Navigator.pop(context);
             },
             child: const Text('Hinzufügen'),
@@ -51,7 +51,7 @@ class MyAppBar extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              context.read<PlayerOverviewBloc>().add(DeleteGroup());
+              context.read<GroupOverviewBloc>().add(DeleteGroup());
               Navigator.pop(context);
             },
             child: const Text('Löschen'),
@@ -72,14 +72,16 @@ class MyAppBar extends StatelessWidget {
 
     BlocBuilder<PlayerFormCubit, Map<String, dynamic>> _myTextFormField(
       TextEditingController textController,
+      String lable,
       String field,
+      bool isDecimal,
     ) {
       return BlocBuilder<PlayerFormCubit, Map<String, dynamic>>(
           builder: (context, state) {
         return TextFormField(
           controller: textController,
-          decoration: InputDecoration(labelText: field),
-          keyboardType: const TextInputType.numberWithOptions(decimal: false),
+          decoration: InputDecoration(labelText: lable),
+          keyboardType: TextInputType.numberWithOptions(decimal: isDecimal),
           onChanged: (String value) {
             context.read<PlayerFormCubit>().updateField(field, value);
           },
@@ -151,11 +153,13 @@ class MyAppBar extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      _myTextFormField(_nameController, 'Name'),
-                      _myTextFormField(_lebenController, 'Lep'),
-                      _myTextFormField(_manaController, 'Mana'),
-                      _myTextFormField(_seelenkraftController, 'Seelenkraft'),
-                      _myTextFormField(_zaehigkeitController, 'Zähigkeit'),
+                      _myTextFormField(_nameController, 'Name', 'name', false),
+                      _myTextFormField(_lebenController, 'Lep', 'lep', true),
+                      _myTextFormField(_manaController, 'Mana', 'mana', true),
+                      _myTextFormField(_seelenkraftController, 'Seelenkraft',
+                          'seelenkraft', true),
+                      _myTextFormField(_zaehigkeitController, 'Zähigkeit',
+                          'zaehigkeit', true),
                       const Padding(padding: EdgeInsets.only(top: 25)),
                       Row(
                         children: [
@@ -215,16 +219,23 @@ class MyAppBar extends StatelessWidget {
             },
           ),
           actions: [
-            TextButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  await context
-                      .read<PlayerFormCubit>()
-                      .savePlayer()
-                      .then((value) => Navigator.of(context).pop());
-                }
+            BlocBuilder<PlayerFormCubit, Map<String, dynamic>>(
+              builder: (BuildContext context, state) {
+                return TextButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      await context
+                          .read<PlayerFormCubit>()
+                          .savePlayer()
+                          .then((value) => context
+                              .read<GroupOverviewBloc>()
+                              .add(LoadPlayers()))
+                          .then((value) => Navigator.of(context).pop());
+                    }
+                  },
+                  child: const Text('Speichern'),
+                );
               },
-              child: const Text('Speichern'),
             ),
             TextButton(
               onPressed: () {
@@ -240,67 +251,71 @@ class MyAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => PlayerFormCubit(),
-      child: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () {
-              _deleteGroup(context);
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      actions: [
+        IconButton(
+          onPressed: () {
+            _deleteGroup(context);
+          },
+          icon: const Icon(Icons.delete),
+        ),
+        Theme(
+          data: Theme.of(context).copyWith(cardColor: Colors.grey.shade400),
+          child: PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'new_group') {
+                _addGroup(context);
+              }
             },
-            icon: const Icon(Icons.delete),
-          ),
-          Theme(
-            data: Theme.of(context).copyWith(cardColor: Colors.grey.shade400),
-            child: PopupMenuButton<String>(
-              onSelected: (value) {
-                if (value == 'new_group') {
-                  _addGroup(context);
-                }
-              },
-              itemBuilder: (BuildContext context) => [
-                const PopupMenuItem(
-                  value: 'new_group',
-                  child: Text('Neue Gruppe hinzufügen'),
-                ),
-                PopupMenuItem(
-                  enabled: false,
-                  child: BlocBuilder<PlayerOverviewBloc, PlayerOverviewState>(
-                    builder: (context, state) {
-                      if (state is PlayerOverviewLoaded) {
-                        if (state.groups.isNotEmpty) {
-                          return Column(
-                            children: state.groups
-                                .map(
-                                  (group) => PopupMenuItem(
-                                    value: group.id,
-                                    child: Text(group.name),
-                                  ),
-                                )
-                                .toList(),
-                          );
-                        } else {
-                          return const Text('Keine Gruppen vorhanden');
-                        }
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem(
+                value: 'new_group',
+                child: Text('Neue Gruppe hinzufügen'),
+              ),
+              PopupMenuItem(
+                enabled: false,
+                child: BlocBuilder<GroupOverviewBloc, PlayerOverviewState>(
+                  builder: (context, state) {
+                    if (state is PlayerOverviewLoaded) {
+                      if (state.groups.isNotEmpty) {
+                        return Column(
+                          children: state.groups
+                              .map(
+                                (group) => PopupMenuItem(
+                                  onTap: () async {
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    prefs.setInt(currentGroup, group.id).then(
+                                        (value) => context
+                                            .read<GroupOverviewBloc>()
+                                            .add(LoadPlayers()));
+                                  },
+                                  child: Text(group.name),
+                                ),
+                              )
+                              .toList(),
+                        );
+                      } else {
+                        return const Text('Keine Gruppen vorhanden');
                       }
-                      return AppBar();
-                    },
-                  ),
+                    }
+                    return AppBar();
+                  },
                 ),
-              ],
-              icon: const Icon(Icons.group, color: Colors.white),
-            ),
+              ),
+            ],
+            icon: const Icon(Icons.group, color: Colors.white),
           ),
-          IconButton(
-            icon: const Icon(Icons.person_add),
-            onPressed: () {
-              _addPlayer(context);
-            },
-          ),
-        ],
-      ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.person_add),
+          onPressed: () {
+            _addPlayer(context);
+          },
+        ),
+      ],
     );
   }
 }

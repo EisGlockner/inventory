@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+import '../misc.dart';
 import 'model.dart';
 
 class DBHelper {
@@ -57,24 +59,21 @@ class DBHelper {
   // insert data into the spieler table
   Future<int?> insertSpieler(Spieler spieler) async {
     Database? db = await _openDatabase();
-    var result = await db.insert('spieler', spieler.toMap()).then((_) {
-      _closeDatabase(db);
-    });
+    int? result = await db.insert('spieler', spieler.toMap());
+    _closeDatabase(db);
+    print(result);
     return result;
   }
 
   // insert data into the spieler_stats table
-  Future<int?> insertSpielerStats(List<SpielerStats> spielerStatsList) async {
+  Future<void> insertSpielerStats(List<SpielerStats> spielerStatsList) async {
     Database? db = await _openDatabase();
-    var result = await db.transaction((txn) async {
-      for(final spielerStats in spielerStatsList) {
+    await db.transaction((txn) async {
+      for (final spielerStats in spielerStatsList) {
         await txn.insert('spieler_stats', spielerStats.toMap());
       }
     });
-    //     await db.insert('spieler_stats', spielerStats.toMap()).then((_) {
-    //   _closeDatabase(db);
-    // });
-    return result;
+    _closeDatabase(db);
   }
 
   // insert data into the spieler_fertigkeiten table
@@ -91,14 +90,23 @@ class DBHelper {
 
   // insert data into the spieler and spieler_stats table. Both have to be completed or the transaction fails
   Future<int?> insertSpielerAndSpielerStats(
-      Spieler spieler, SpielerStats spielerStats) async {
+      Spieler spieler, List<SpielerStats> spielerStatsList) async {
     Database? db = await _openDatabase();
     var result = await db.transaction((txn) async {
-      await txn.insert('spieler', spieler.toMap());
-      await txn.insert('spieler_stats', spielerStats.toMap());
-    }).then((_) {
-      _closeDatabase(db);
+      // insert Spieler and get id for following inserts
+      int playerId = await txn.insert('spieler', spieler.toMap());
+      // insert every playerstat
+      for (final spielerStats in spielerStatsList) {
+        spielerStats.spielerId = playerId;
+        await txn.insert('spieler_stats', spielerStats.toMap());
+      }
+      // Get current Group and insert player in it
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      int? lastGroup = prefs.getInt(currentGroup);
+      txn.insert('spieler_gruppen',
+      {'spielerId': playerId, 'gruppenId': lastGroup});
     });
+    _closeDatabase(db);
     return result;
   }
 
@@ -124,7 +132,27 @@ class DBHelper {
   Future<List<Spieler>> getSpieler() async {
     Database? db = await _openDatabase();
     List<Map>? maps = (await db.query('spieler')).cast<Map>();
-    await _closeDatabase(db);
+    _closeDatabase(db);
+    if (maps.isNotEmpty) {
+      return List.generate(maps.length, (i) {
+        return Spieler.fromMap(Map<String, dynamic>.from(maps[i]));
+      });
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<Spieler>> getSpielerInGruppen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? lastGroup = prefs.getInt(currentGroup);
+    Database? db = await _openDatabase();
+    List<Map>? maps = (await db.rawQuery('''
+    SELECT spieler.*
+    FROM spieler
+    INNER JOIN spieler_gruppen ON spieler.id = spieler_gruppen.spielerId
+    WHERE spieler_gruppen.gruppenId = $lastGroup
+  ''')).cast<Map>();
+    _closeDatabase(db);
     if (maps.isNotEmpty) {
       return List.generate(maps.length, (i) {
         return Spieler.fromMap(Map<String, dynamic>.from(maps[i]));
