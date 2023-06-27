@@ -103,8 +103,8 @@ class DBHelper {
       // Get current Group and insert player in it
       SharedPreferences prefs = await SharedPreferences.getInstance();
       int? lastGroup = prefs.getInt(currentGroup);
-      txn.insert('spieler_gruppen',
-      {'spielerId': playerId, 'gruppenId': lastGroup});
+      txn.insert(
+          'spieler_gruppen', {'spielerId': playerId, 'gruppenId': lastGroup});
     });
     _closeDatabase(db);
     return result;
@@ -309,18 +309,24 @@ class DBHelper {
   }
 
   // Lösche eine Gruppe
-  Future<int?> deleteGruppe(int id) async {
+  Future<int?> deleteGruppe(int id, bool deleteSpieler) async {
     Database? db = await _openDatabase();
     int? result;
     try {
       result = await db.transaction((txn) async {
         await txn.delete('gruppen', where: 'id = ?', whereArgs: [id]);
+        /// Also delete players in the group
+        if (deleteSpieler) {
+          await txn.delete('spieler',
+              where:
+              'id IN (SELECT spielerId FROM spieler_gruppen WHERE gruppenId = ?)',
+              whereArgs: [id]);
+        }
         await txn
             .delete('spieler_gruppen', where: 'gruppenId = ?', whereArgs: [id]);
-      }).then((_) {
-        _closeDatabase(db);
-        return null;
       });
+      _closeDatabase(db);
+      return null;
     } on DatabaseException catch (e) {
       print(e.toString());
     }

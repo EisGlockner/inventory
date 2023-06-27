@@ -8,7 +8,7 @@ class PlayerFormCubit extends Cubit<Map<String, dynamic>> {
       : super({
     'name': '',
     'leben': '',
-    'mana': '',
+    'mana': '0',
     'seelenkraft': '',
     'zaehigkeit': '',
     'proviant': '0',

@@ -50,7 +50,7 @@ class GroupOverviewBloc
         SharedPreferences prefs = await SharedPreferences.getInstance();
         int? lastGroup = prefs.getInt(currentGroup);
         lastGroup = lastGroup ?? 0;
-        await DBHelper.instance.deleteGruppe(lastGroup);
+        await DBHelper.instance.deleteGruppe(lastGroup, event.deleteSpieler);
         int? firstGroup = await DBHelper.instance.getFirstGroupId();
         firstGroup = firstGroup ?? 0;
         await prefs.setInt(currentGroup, firstGroup);

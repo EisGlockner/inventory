@@ -8,6 +8,10 @@ class AddGroup extends PlayerOverviewEvent {
   AddGroup(this.name);
 }
 
-class DeleteGroup extends PlayerOverviewEvent {}
+class DeleteGroup extends PlayerOverviewEvent {
+  final bool deleteSpieler;
+
+  DeleteGroup(this.deleteSpieler);
+}
 
 class LoadGroup extends PlayerOverviewEvent {}

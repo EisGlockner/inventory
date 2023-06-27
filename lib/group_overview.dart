@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inventory/widgets/appbar.dart';
+import 'package:inventory/widgets/appbar/appbar.dart';
 import 'package:inventory/widgets/group_overview_title.dart';
 import 'package:inventory/widgets/group_overview_player.dart';
 
