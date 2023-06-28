@@ -64,8 +64,9 @@ class MyAppBar extends StatelessWidget {
                       } else {
                         return const Text('Keine Gruppen vorhanden');
                       }
+                    } else {
+                      return const CircularProgressIndicator(color: Colors.grey,);
                     }
-                    return AppBar();
                   },
                 ),
               ),

@@ -13,5 +13,3 @@ class DeleteGroup extends PlayerOverviewEvent {
 
   DeleteGroup(this.deleteSpieler);
 }
-
-class LoadGroup extends PlayerOverviewEvent {}
