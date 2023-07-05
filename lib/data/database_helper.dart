@@ -315,7 +315,7 @@ class DBHelper {
     try {
       result = await db.transaction((txn) async {
         await txn.delete('gruppen', where: 'id = ?', whereArgs: [id]);
-        /// Also delete players in the group
+        //Also delete players in the group
         if (deleteSpieler) {
           await txn.delete('spieler',
               where:
