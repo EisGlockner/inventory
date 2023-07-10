@@ -9,18 +9,23 @@ class AddPlayerDialog {
   static Future<void> show(BuildContext context) async {
     final formKey = GlobalKey<FormState>();
     final TextEditingController nameController = TextEditingController();
+    final TextEditingController playerNameController = TextEditingController();
     final TextEditingController lebenController = TextEditingController();
     final TextEditingController manaController = TextEditingController();
-    final TextEditingController seelenkraftController =
-    TextEditingController();
+    final TextEditingController seelenkraftController = TextEditingController();
     final TextEditingController zaehigkeitController = TextEditingController();
+    final TextEditingController schicksalspunkteController = TextEditingController();
+    final TextEditingController kreuzerController = TextEditingController();
+    final TextEditingController hellerController = TextEditingController();
+    final TextEditingController silberController = TextEditingController();
+    final TextEditingController dukatenController = TextEditingController();
 
     Widget myTextFormField(
-        TextEditingController textController,
-        String label,
-        String field,
-        bool isDecimal,
-        ) {
+      TextEditingController textController,
+      String label,
+      String field,
+      bool isDecimal,
+    ) {
       return BlocBuilder<PlayerFormCubit, Map<String, dynamic>>(
         builder: (context, state) {
           return TextFormField(
@@ -100,13 +105,19 @@ class AddPlayerDialog {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       myTextFormField(nameController, 'Name', 'name', false),
+                      myTextFormField(playerNameController, 'Spielername',
+                          'spielerName', false),
                       myTextFormField(lebenController, 'Lep', 'lep', true),
                       myTextFormField(manaController, 'Mana', 'mana', true),
                       myTextFormField(seelenkraftController, 'Seelenkraft',
                           'seelenkraft', true),
                       myTextFormField(zaehigkeitController, 'Zähigkeit',
                           'zaehigkeit', true),
+                      myTextFormField(schicksalspunkteController, 'Schicksalspunkte',
+                          'schicksalspunkte', true),
+
                       const Padding(padding: EdgeInsets.only(top: 25)),
+
                       Row(
                         children: [
                           Expanded(
@@ -151,7 +162,16 @@ class AddPlayerDialog {
                           ),
                         ],
                       ),
+
                       const Padding(padding: EdgeInsets.only(top: 25)),
+
+                      myTextFormField(kreuzerController, 'Kreuzer', 'kreuzer', true),
+                      myTextFormField(hellerController, 'Heller', 'heller', true),
+                      myTextFormField(silberController, 'Silber', 'silber', true),
+                      myTextFormField(dukatenController, 'Dukaten', 'dukaten', true),
+
+                      const Padding(padding: EdgeInsets.only(top: 25)),
+
                       myCheckboxListTile('isGlaesern', 'Gläsern'),
                       myCheckboxListTile('isEisern', 'Eisern'),
                       myCheckboxListTile('isZaeh', 'Zäh'),
@@ -174,8 +194,8 @@ class AddPlayerDialog {
                           .read<PlayerFormCubit>()
                           .savePlayer()
                           .then((value) => context
-                          .read<GroupOverviewBloc>()
-                          .add(LoadPlayers()))
+                              .read<GroupOverviewBloc>()
+                              .add(LoadPlayers()))
                           .then((value) => Navigator.of(context).pop());
                     }
                   },

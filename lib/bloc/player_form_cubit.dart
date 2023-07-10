@@ -6,28 +6,34 @@ import '../data/database_helper.dart';
 class PlayerFormCubit extends Cubit<Map<String, dynamic>> {
   PlayerFormCubit()
       : super({
-    'name': '',
-    'leben': '',
-    'mana': '0',
-    'seelenkraft': '',
-    'zaehigkeit': '',
-    'proviant': '0',
-    'isGlaesern': false,
-    'isEisern': false,
-    'isZaeh': false,
-    'isZerbrechlich': false,
-    'hasAsp': false,
-    'hasKap': false,
-    'isLoading': false,
-    'MU': 8,
-    'KL': 8,
-    'IN': 8,
-    'CH': 8,
-    'FF': 8,
-    'GE': 8,
-    'KO': 8,
-    'KK': 8,
-  });
+          'name': '',
+          'spielerName': '',
+          'leben': '',
+          'mana': '0',
+          'seelenkraft': '',
+          'zaehigkeit': '',
+          'schicksalspunkte': '',
+          'proviant': '0',
+          'isGlaesern': false,
+          'isEisern': false,
+          'isZaeh': false,
+          'isZerbrechlich': false,
+          'hasAsp': false,
+          'hasKap': false,
+          'kreuzer': '0',
+          'heller': '0',
+          'silber': '0',
+          'dukaten': '0',
+          'isLoading': false,
+          'MU': 8,
+          'KL': 8,
+          'IN': 8,
+          'CH': 8,
+          'FF': 8,
+          'GE': 8,
+          'KO': 8,
+          'KK': 8,
+        });
 
   void updateField(String field, dynamic value) {
     emit({...state, field: value});
@@ -38,10 +44,12 @@ class PlayerFormCubit extends Cubit<Map<String, dynamic>> {
 
     final spieler = Spieler(
       name: state['name'],
+      spielerName: state['spielerName'],
       leben: int.parse(state['lep']),
       mana: int.parse(state['mana']),
       seelenkraft: int.parse(state['seelenkraft']),
       zaehigkeit: int.parse(state['zaehigkeit']),
+      schicksalspunkte: int.parse(state['schicksalspunkte']),
       proviant: int.parse(state['proviant']),
       isGlaesern: state['isGlaesern'] == false ? 0 : 1,
       isEisern: state['isEisern'] == false ? 0 : 1,
@@ -49,6 +57,10 @@ class PlayerFormCubit extends Cubit<Map<String, dynamic>> {
       isZerbrechlich: state['isZerbrechlich'] == false ? 0 : 1,
       hasAsp: state['hasAsp'] == false ? 0 : 1,
       hasKap: state['hasKap'] == false ? 0 : 1,
+      kreuzer: int.parse(state['kreuzer']),
+      heller: int.parse(state['heller']),
+      silber: int.parse(state['silber']),
+      dukaten: int.parse(state['dukaten']),
     );
 
     final spielerStatsList = [

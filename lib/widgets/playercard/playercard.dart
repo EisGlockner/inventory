@@ -31,7 +31,7 @@ class GroupOverviewPlayer extends StatelessWidget {
                             Text(player.name,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w500)),
-                            const Text('0D 0S 0H 0K'),
+                            Text('${player.dukaten}D ${player.silber}S ${player.heller}H ${player.kreuzer}K'),
                           ],
                         ),
                         const Padding(padding: EdgeInsets.only(bottom: 8)),

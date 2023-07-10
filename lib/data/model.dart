@@ -1,10 +1,12 @@
 class Spieler {
   final int? id;
   final String name;
+  final String spielerName;
   final int leben;
   final int mana;
   final int seelenkraft;
   final int zaehigkeit;
+  final int schicksalspunkte;
   final int? proviant;
   final int isGlaesern;
   final int isEisern;
@@ -12,14 +14,20 @@ class Spieler {
   final int isZerbrechlich;
   final int hasAsp;
   final int hasKap;
+  final int kreuzer;
+  final int heller;
+  final int silber;
+  final int dukaten;
 
   Spieler({
     this.id,
     required this.name,
+    required this.spielerName,
     required this.leben,
     required this.mana,
     required this.seelenkraft,
     required this.zaehigkeit,
+    required this.schicksalspunkte,
     this.proviant,
     required this.isGlaesern,
     required this.isEisern,
@@ -27,15 +35,21 @@ class Spieler {
     required this.isZerbrechlich,
     required this.hasAsp,
     required this.hasKap,
+    required this.kreuzer,
+    required this.heller,
+    required this.silber,
+    required this.dukaten,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'name': name,
+      'spielerName': spielerName,
       'leben': leben,
       'mana': mana,
       'seelenkraft': seelenkraft,
       'zaehigkeit': zaehigkeit,
+      'schicksalspunkte': schicksalspunkte,
       'proviant': proviant,
       'isGlaesern': isGlaesern,
       'isEisern': isEisern,
@@ -43,24 +57,35 @@ class Spieler {
       'isZerbrechlich': isZerbrechlich,
       'hasAsp': hasAsp,
       'hasKap': hasKap,
+      'kreuzer': kreuzer,
+      'heller': heller,
+      'silber': silber,
+      'dukaten': dukaten,
     };
   }
 
   factory Spieler.fromMap(Map<String, dynamic> map) {
     return Spieler(
-        id: map['id'],
-        name: map['name'],
-        leben: map['leben'],
-        mana: map['mana'],
-        seelenkraft: map['seelenkraft'],
-        zaehigkeit: map['zaehigkeit'],
-        proviant: map['proviant'],
-        isGlaesern: map['isGlaesern'],
-        isEisern: map['isEisern'],
-        isZaeh: map['isZaeh'],
-        isZerbrechlich: map['isZerbrechlich'],
-        hasAsp: map['hasAsp'],
-        hasKap: map['hasKap']);
+      id: map['id'],
+      name: map['name'],
+      spielerName: map['spielerName'],
+      leben: map['leben'],
+      mana: map['mana'],
+      seelenkraft: map['seelenkraft'],
+      zaehigkeit: map['zaehigkeit'],
+      schicksalspunkte: map['schicksalspunkte'],
+      proviant: map['proviant'],
+      isGlaesern: map['isGlaesern'],
+      isEisern: map['isEisern'],
+      isZaeh: map['isZaeh'],
+      isZerbrechlich: map['isZerbrechlich'],
+      hasAsp: map['hasAsp'],
+      hasKap: map['hasKap'],
+      kreuzer: map['kreuzer'],
+      heller: map['heller'],
+      silber: map['silber'],
+      dukaten: map['dukaten'],
+    );
   }
 }
 
