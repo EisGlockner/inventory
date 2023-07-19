@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/group_overview_bloc.dart';
 import '../../bloc/group_overview_events.dart';
+import 'package:inventory/misc.dart' as misc;
 
 class AddGroupDialog {
   static Future<void> show(BuildContext context) async {
@@ -11,9 +12,12 @@ class AddGroupDialog {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Gruppe hinzufügen'),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(hintText: 'Gruppenname'),
+        content: SizedBox(
+          width: misc.scrW(context, 0.75),
+          child: TextField(
+            controller: controller,
+            decoration: const InputDecoration(hintText: 'Gruppenname'),
+          ),
         ),
         actions: [
           TextButton(

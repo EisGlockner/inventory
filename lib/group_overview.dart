@@ -16,23 +16,25 @@ class PlayerOverview extends StatelessWidget {
         preferredSize: Size.fromHeight(50),
         child: MyAppBar(),
       ),
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(
-          misc.scrW(context, 0.04),
-          misc.scrH(context, 0.03),
-          misc.scrW(context, 0.04),
-          0,
-        ),
-        child: const Column(
-          children: [
-            PlayerOverviewTitle(),
-            Padding(padding: EdgeInsets.only(bottom: 15)),
-            Divider(
-              color: Colors.black,
-              thickness: 1,
-            ),
-            GroupOverviewPlayer(),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            misc.scrW(context, 0.04),
+            misc.scrH(context, 0.03),
+            misc.scrW(context, 0.04),
+            misc.scrW(context, 0.04),
+          ),
+          child: const Column(
+            children: [
+              PlayerOverviewTitle(),
+              Padding(padding: EdgeInsets.only(bottom: 15)),
+              Divider(
+                color: Colors.black,
+                thickness: 1,
+              ),
+              GroupOverviewPlayer(),
+            ],
+          ),
         ),
       ),
     );
