@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/group_overview_events.dart';
 import 'bloc/group_overview_states.dart';
+import 'bloc/health_cubit.dart';
 import 'data/database_helper.dart';
 
 void main() => runApp(const MyApp());
@@ -30,8 +31,11 @@ class MyApp extends StatelessWidget {
                 context.read<GroupOverviewBloc>().add(LoadPlayers());
               }
             },
-            child: const MaterialApp(
-              home: PlayerOverview(),
+            child: BlocProvider(
+              create: (context) => HealthCubit(),
+              child: const MaterialApp(
+                home: PlayerOverview(),
+              ),
             ),
           ),
         ),

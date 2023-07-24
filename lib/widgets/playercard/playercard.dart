@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory/widgets/playercard/health_icon.dart';
 
 import '../../bloc/group_overview_bloc.dart';
 import '../../bloc/group_overview_states.dart';
@@ -40,19 +41,7 @@ class GroupOverviewPlayer extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            SizedBox(
-                              width: misc.scrW(context, 0.23),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Inventory.healthpotion,
-                                    color: Colors.red,
-                                  ),
-                                  Text(' ${player.leben}'),
-                                ],
-                              ),
-                            ),
+                            HealthIcon(playerId: player.id, currentHealth: player.leben),
                             SizedBox(
                               width: misc.scrW(context, 0.23),
                               child: Row(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/group_overview_bloc.dart';
@@ -35,6 +36,9 @@ class AddPlayerDialog {
             keyboardType: isDecimal == true
                 ? const TextInputType.numberWithOptions(decimal: false)
                 : TextInputType.text,
+            inputFormatters: isDecimal == true
+                ? [FilteringTextInputFormatter.digitsOnly]
+                : [],
             onChanged: (String value) {
               context.read<PlayerFormCubit>().updateField(field, value);
             },
