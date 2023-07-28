@@ -1,4 +1,4 @@
-import '../data/model.dart';
+import '../../data/model.dart';
 
 abstract class PlayerOverviewState {}
 

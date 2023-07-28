@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:inventory/bloc/group_overview_bloc.dart';
 import 'package:inventory/group_overview.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'bloc/group_overview_events.dart';
-import 'bloc/group_overview_states.dart';
-import 'bloc/health_cubit.dart';
+import 'bloc/cubits/health_cubit.dart';
+import 'bloc/cubits/mana_cubit.dart';
+import 'bloc/cubits/player_form_cubit.dart';
+import 'bloc/group_overview_bloc/group_overview_bloc.dart';
+import 'bloc/group_overview_bloc/group_overview_events.dart';
+import 'bloc/group_overview_bloc/group_overview_states.dart';
 import 'data/database_helper.dart';
 
 void main() => runApp(const MyApp());
@@ -15,15 +17,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AppBloc()..add(AppStartedEvent()),
-      child: BlocListener<AppBloc, AppState>(
-        listener: (context, state) {
-          if (state is AppStarted) {
-            _initializeDatabase();
-          }
-        },
-        child: BlocProvider(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AppBloc()..add(AppStartedEvent()),
+          child: BlocListener<AppBloc, AppState>(
+            listener: (context, state) {
+              if (state is AppStarted) {
+                _initializeDatabase();
+              }
+            },
+          ),
+        ),
+        BlocProvider(
           create: (context) => GroupOverviewBloc()..add(LoadPlayers()),
           child: BlocListener<GroupOverviewBloc, PlayerOverviewState>(
             listener: (context, state) {
@@ -31,14 +37,20 @@ class MyApp extends StatelessWidget {
                 context.read<GroupOverviewBloc>().add(LoadPlayers());
               }
             },
-            child: BlocProvider(
-              create: (context) => HealthCubit(),
-              child: const MaterialApp(
-                home: PlayerOverview(),
-              ),
-            ),
           ),
         ),
+        BlocProvider(
+          create: (context) => PlayerFormCubit(),
+        ),
+        BlocProvider(
+          create: (context) => HealthCubit(),
+        ),
+        BlocProvider(
+          create: (context) => ManaCubit(),
+        ),
+      ],
+      child: const MaterialApp(
+        home: PlayerOverview(),
       ),
     );
   }

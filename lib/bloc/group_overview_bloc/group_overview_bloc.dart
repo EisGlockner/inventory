@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory/bloc/group_overview_events.dart';
-import 'package:inventory/bloc/group_overview_states.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../data/database_helper.dart';
-import '../data/model.dart';
-import '../misc.dart';
+import '../../data/database_helper.dart';
+import '../../data/model.dart';
+import '../../misc.dart';
+import 'group_overview_events.dart';
+import 'group_overview_states.dart';
 
 class GroupOverviewBloc
     extends Bloc<PlayerOverviewEvent, PlayerOverviewState> {

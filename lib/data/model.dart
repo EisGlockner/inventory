@@ -3,11 +3,13 @@ class Spieler {
   final String name;
   final String spielerName;
   final int leben;
-  final int mana;
+  final int maxLeben;
+  late final int mana;
+  final int maxMana;
   final int seelenkraft;
   final int zaehigkeit;
   final int schicksalspunkte;
-  final int? proviant;
+  final int proviant;
   final int isGlaesern;
   final int isEisern;
   final int isZaeh;
@@ -24,11 +26,13 @@ class Spieler {
     required this.name,
     required this.spielerName,
     required this.leben,
+    required this.maxLeben,
     required this.mana,
+    required this.maxMana,
     required this.seelenkraft,
     required this.zaehigkeit,
     required this.schicksalspunkte,
-    this.proviant,
+    required this.proviant,
     required this.isGlaesern,
     required this.isEisern,
     required this.isZaeh,
@@ -46,7 +50,9 @@ class Spieler {
       'name': name,
       'spielerName': spielerName,
       'leben': leben,
+      'maxLeben': maxLeben,
       'mana': mana,
+      'maxMana': maxMana,
       'seelenkraft': seelenkraft,
       'zaehigkeit': zaehigkeit,
       'schicksalspunkte': schicksalspunkte,
@@ -70,7 +76,9 @@ class Spieler {
       name: map['name'],
       spielerName: map['spielerName'],
       leben: map['leben'],
+      maxLeben: map['maxLeben'],
       mana: map['mana'],
+      maxMana: map['maxMana'],
       seelenkraft: map['seelenkraft'],
       zaehigkeit: map['zaehigkeit'],
       schicksalspunkte: map['schicksalspunkte'],

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/model.dart';
-import '../data/database_helper.dart';
+import '../../data/model.dart';
+import '../../data/database_helper.dart';
 
 class PlayerFormCubit extends Cubit<Map<String, dynamic>> {
   PlayerFormCubit()
@@ -45,8 +45,10 @@ class PlayerFormCubit extends Cubit<Map<String, dynamic>> {
     final spieler = Spieler(
       name: state['name'],
       spielerName: state['spielerName'],
-      leben: int.parse(state['lep']),
+      leben: int.parse(state['leben']),
+      maxLeben: int.parse(state['leben']),
       mana: int.parse(state['mana']),
+      maxMana: int.parse(state['mana']),
       seelenkraft: int.parse(state['seelenkraft']),
       zaehigkeit: int.parse(state['zaehigkeit']),
       schicksalspunkte: int.parse(state['schicksalspunkte']),

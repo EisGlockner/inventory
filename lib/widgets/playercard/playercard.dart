@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory/widgets/playercard/health_icon.dart';
+import 'package:inventory/widgets/playercard/health_iconbutton.dart';
 
-import '../../bloc/group_overview_bloc.dart';
-import '../../bloc/group_overview_states.dart';
+import '../../bloc/group_overview_bloc/group_overview_bloc.dart';
+import '../../bloc/group_overview_bloc/group_overview_states.dart';
 import '../../icons/inventory_icons.dart';
 import '../../misc.dart' as misc;
+import 'mana_iconbutton.dart';
 
 class GroupOverviewPlayer extends StatelessWidget {
   const GroupOverviewPlayer({Key? key}) : super(key: key);
@@ -41,33 +42,8 @@ class GroupOverviewPlayer extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            HealthIcon(playerId: player.id, currentHealth: player.leben),
-                            SizedBox(
-                              width: misc.scrW(context, 0.23),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  player.hasKap == 0 &&
-                                          player.hasAsp == 0
-                                      ? const Icon(
-                                          Icons.close,
-                                          color: Colors.grey,
-                                        )
-                                      : player.hasAsp == 1
-                                          ? const Icon(
-                                              Inventory.mana,
-                                              color: Colors.blue,
-                                            )
-                                          : const Icon(
-                                              Inventory.twelvegods,
-                                              color: Colors.yellow,
-                                            ),
-                                  player.hasAsp == 1 || player.hasKap == 1 ?
-                                      Text(' ${player.mana.toString()}') :
-                                      const Text(' 0'),
-                                ],
-                              ),
-                            ),
+                            HealthIcon(playerId: player.id, currentHealth: player.leben, maxHealth: player.maxLeben),
+                            ManaIcon(player: player, currentMana: player.mana,),
                             SizedBox(
                               width: misc.scrW(context, 0.23),
                               child: const Row(

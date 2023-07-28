@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../bloc/group_overview_bloc.dart';
-import '../bloc/group_overview_states.dart';
+import '../bloc/group_overview_bloc/group_overview_bloc.dart';
+import '../bloc/group_overview_bloc/group_overview_states.dart';
 
 class PlayerOverviewTitle extends StatelessWidget {
   const PlayerOverviewTitle({super.key});

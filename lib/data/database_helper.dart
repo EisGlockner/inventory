@@ -354,11 +354,24 @@ class DBHelper {
     return result;
   }
 
-  Future<int?> updateHealth(int playerId, int newHealth) async {
+  Future<int?> updateLeben(int playerId, int newHealth) async {
     Database? db = await _openDatabase();
     var result = await db.update(
       'spieler',
       {'leben': newHealth},
+      where: 'id = ?',
+      whereArgs: [playerId],
+    ).then((_) {
+      _closeDatabase(db);
+    });
+    return result;
+  }
+
+  Future<int?> updateMana(int playerId, int newMana) async {
+    Database? db = await _openDatabase();
+    var result = await db.update(
+      'spieler',
+      {'mana': newMana},
       where: 'id = ?',
       whereArgs: [playerId],
     ).then((_) {

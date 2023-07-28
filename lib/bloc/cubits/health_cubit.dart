@@ -8,23 +8,28 @@ class IncrementHealth extends HealthEvent {
   final int value;
   final int playerId;
   final int currentHealth;
+  final int maxHealth;
 
-  IncrementHealth(this.value, this.playerId, this.currentHealth);
+  IncrementHealth(
+      this.value, this.playerId, this.currentHealth, this.maxHealth);
 }
 
 class DecrementHealth extends HealthEvent {
   final int value;
   final int playerId;
   final int currentHealth;
+  final int maxHealth;
 
-  DecrementHealth(this.value, this.playerId, this.currentHealth);
+  DecrementHealth(
+      this.value, this.playerId, this.currentHealth, this.maxHealth);
 }
 
 class SetHealth extends HealthEvent {
   final int value;
   final int playerId;
+  final int maxHealth;
 
-  SetHealth(this.value, this.playerId);
+  SetHealth(this.value, this.playerId, this.maxHealth);
 }
 
 // State
@@ -39,20 +44,39 @@ class HealthCubit extends Cubit<HealthState> {
   HealthCubit() : super(HealthState(0));
 
   void updateHealth(int playerId, int newHealth) {
-    DBHelper.instance.updateHealth(playerId, newHealth).then((_) {
+    DBHelper.instance.updateLeben(playerId, newHealth).then((_) {
       emit(HealthState(newHealth));
     });
   }
 
-  void handleEvent(HealthEvent event) {
+  int handleEvent(HealthEvent event) {
     if (event is IncrementHealth) {
       int newHealth = event.currentHealth + event.value;
-      updateHealth(event.playerId, newHealth);
+
+      if (newHealth >= event.maxHealth) {
+        updateHealth(event.playerId, event.maxHealth);
+        return event.maxHealth;
+      } else {
+        updateHealth(event.playerId, newHealth);
+        return newHealth;
+      }
+
     } else if (event is DecrementHealth) {
       int newHealth = event.currentHealth - event.value;
       updateHealth(event.playerId, newHealth);
+      return newHealth;
+
     } else if (event is SetHealth) {
-      updateHealth(event.playerId, event.value);
+      if (event.value >= event.maxHealth) {
+        updateHealth(event.playerId, event.maxHealth);
+        return event.maxHealth;
+      } else {
+        updateHealth(event.playerId, event.value);
+        return event.value;
+      }
+
+    } else {
+      return 0;
     }
   }
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory/bloc/group_overview_states.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../bloc/group_overview_bloc.dart';
-import '../../bloc/group_overview_events.dart';
+import '../../bloc/group_overview_bloc/group_overview_bloc.dart';
+import '../../bloc/group_overview_bloc/group_overview_events.dart';
+import '../../bloc/group_overview_bloc/group_overview_states.dart';
 import '../../misc.dart';
 import 'add_group.dart';
 import 'add_player.dart';
