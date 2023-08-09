@@ -112,4 +112,36 @@ class PlayerFormCubit extends Cubit<Map<String, dynamic>> {
 
     emit({...state, 'isLoading': false});
   }
+
+  void resetForm() {
+    emit({
+      'name': '',
+      'spielerName': '',
+      'leben': '',
+      'mana': '0',
+      'seelenkraft': '',
+      'zaehigkeit': '',
+      'schicksalspunkte': '',
+      'proviant': '0',
+      'isGlaesern': false,
+      'isEisern': false,
+      'isZaeh': false,
+      'isZerbrechlich': false,
+      'hasAsp': false,
+      'hasKap': false,
+      'kreuzer': '0',
+      'heller': '0',
+      'silber': '0',
+      'dukaten': '0',
+      'isLoading': false,
+      'MU': 8,
+      'KL': 8,
+      'IN': 8,
+      'CH': 8,
+      'FF': 8,
+      'GE': 8,
+      'KO': 8,
+      'KK': 8,
+    });
+  }
 }

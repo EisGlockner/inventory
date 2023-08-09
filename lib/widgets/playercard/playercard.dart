@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory/widgets/playercard/health_iconbutton.dart';
+import 'package:inventory/widgets/playercard/money_iconbutton.dart';
+import 'package:inventory/widgets/playercard/pain_icon.dart';
+import 'package:inventory/widgets/playercard/provision_iconbutton.dart';
 
 import '../../bloc/group_overview_bloc/group_overview_bloc.dart';
 import '../../bloc/group_overview_bloc/group_overview_states.dart';
-import '../../icons/inventory_icons.dart';
-import '../../misc.dart' as misc;
 import 'mana_iconbutton.dart';
 
 class GroupOverviewPlayer extends StatelessWidget {
@@ -33,7 +34,15 @@ class GroupOverviewPlayer extends StatelessWidget {
                             Text(player.name,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w500)),
-                            Text('${player.dukaten}D ${player.silber}S ${player.heller}H ${player.kreuzer}K'),
+                            MoneyIcon(
+                              money: [
+                                player.dukaten,
+                                player.silber,
+                                player.heller,
+                                player.kreuzer,
+                              ],
+                              playerId: player.id,
+                            ),
                           ],
                         ),
                         const Padding(padding: EdgeInsets.only(bottom: 8)),
@@ -42,34 +51,18 @@ class GroupOverviewPlayer extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            HealthIcon(playerId: player.id, currentHealth: player.leben, maxHealth: player.maxLeben),
-                            ManaIcon(player: player, currentMana: player.mana,),
-                            SizedBox(
-                              width: misc.scrW(context, 0.23),
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Inventory.schmerz,
-                                    color: Colors.white70,
-                                  ),
-                                  Text(' 0'),
-                                ],
-                              ),
+                            HealthIcon(
+                                playerId: player.id,
+                                currentHealth: player.leben,
+                                maxHealth: player.maxLeben),
+                            ManaIcon(
+                              player: player,
+                              currentMana: player.mana,
                             ),
-                            SizedBox(
-                              width: misc.scrW(context, 0.23),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Inventory.proviant,
-                                    color: Colors.brown,
-                                  ),
-                                  Text(' ${player.proviant.toString()}'),
-                                ],
-                              ),
-                            ),
+                            PainIcon(currentHealth: player.leben),
+                            ProvisionIcon(
+                                playerId: player.id,
+                                currentProvision: player.proviant),
                           ],
                         ),
                         const Padding(padding: EdgeInsets.only(bottom: 15)),

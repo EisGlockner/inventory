@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory/bloc/group_overview_bloc/group_overview_bloc.dart';
 import 'package:inventory/data/database_helper.dart';
 import 'package:inventory/data/model.dart';
 
@@ -27,9 +26,8 @@ class DecrementMana extends ManaEvent {
 class SetMana extends ManaEvent {
   final int value;
   final Spieler player;
-  final int currentMana;
 
-  SetMana(this.value, this.player, this.currentMana);
+  SetMana(this.value, this.player);
 }
 
 // State
@@ -63,8 +61,14 @@ class ManaCubit extends Cubit<ManaState> {
 
     } else if (event is DecrementMana) {
       int newMana = event.currentMana - event.value;
-      updateMana(event.player.id!, newMana);
-      return newMana;
+
+      if (newMana < 0) {
+        updateMana(event.player.id!, 0);
+        return 0;
+      } else {
+        updateMana(event.player.id!, newMana);
+        return newMana;
+      }
 
     } else if (event is SetMana) {
       if (event.value >= event.player.maxMana) {

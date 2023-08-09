@@ -2,22 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/cubits/health_cubit.dart';
+import '../../bloc/cubits/provision_cubit.dart';
 import '../../icons/inventory_icons.dart';
-import 'package:inventory/misc.dart' as misc;
+import '../../misc.dart' as misc;
 
-class HealthIcon extends StatelessWidget {
+class ProvisionIcon extends StatelessWidget {
   final int? playerId;
-  int currentHealth;
-  final int maxHealth;
+  int currentProvision;
 
-  HealthIcon({super.key, required this.playerId, required this.currentHealth, required this.maxHealth});
+  ProvisionIcon({super.key, required this.playerId, required this.currentProvision});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        _showHealthDialog(context);
+        _showProvisionDialog(context);
       },
       child: SizedBox(
         width: misc.scrW(context, 0.23),
@@ -25,11 +24,11 @@ class HealthIcon extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
-              Inventory.healthpotion,
-              color: Colors.red,
+              Inventory.proviant,
+              color: Colors.brown,
             ),
-            BlocBuilder<HealthCubit, HealthState>(builder: (context, state) {
-              return Text(' $currentHealth');
+            BlocBuilder<ProvisionCubit, ProvisionState>(builder: (context, state) {
+              return Text(' $currentProvision');
             }),
           ],
         ),
@@ -37,14 +36,14 @@ class HealthIcon extends StatelessWidget {
     );
   }
 
-  void _showHealthDialog(BuildContext context) {
+  void _showProvisionDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
-        int newHealth = currentHealth;
-        return BlocBuilder<HealthCubit, HealthState>(builder: (context, state) {
+        int newProvision = currentProvision;
+        return BlocBuilder<ProvisionCubit, ProvisionState>(builder: (context, state) {
           return AlertDialog(
-            title: const Text('Leben bearbeiten'),
+            title: const Text('Proviant bearbeiten'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -53,7 +52,7 @@ class HealthIcon extends StatelessWidget {
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   autofocus: true,
                   onChanged: (value) {
-                    newHealth = int.tryParse(value) ?? currentHealth;
+                    newProvision = int.tryParse(value) ?? currentProvision;
                   },
                 ),
               ],
@@ -67,19 +66,19 @@ class HealthIcon extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  _setHealth(context, newHealth);
+                  _setProvision(context, newProvision);
                 },
                 child: const Text('=', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
               ),
               TextButton(
                 onPressed: () {
-                  _incrementHealth(context, newHealth);
+                  _incrementProvision(context, newProvision);
                 },
                 child: const Text('+', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
               ),
               TextButton(
                 onPressed: () {
-                  _decrementHealth(context, newHealth);
+                  _decrementProvision(context, newProvision);
                 },
                 child: const Text('-', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
               ),
@@ -90,34 +89,33 @@ class HealthIcon extends StatelessWidget {
     );
   }
 
-// ToDo: Figure out if context.read or BlocProvider.of is better
-  void _incrementHealth(BuildContext context, int newHealth) {
-    currentHealth = context.read<HealthCubit>().handleEvent(
-          IncrementHealth(newHealth, playerId!, currentHealth, maxHealth), context,
-        );
+  void _incrementProvision(BuildContext context, int newProvision) {
+    currentProvision = context.read<ProvisionCubit>().handleEvent(
+      IncrementProvision(newProvision, playerId!, currentProvision),
+    );
 
-    // BlocProvider.of<HealthCubit>(context)
-    //     .handleEvent(IncrementHealth(newHealth, playerId!, currentHealth));
+    // BlocProvider.of<ProvisionCubit>(context)
+    //     .handleEvent(IncrementProvision(newProvision, playerId!, currentProvision));
     Navigator.pop(context);
   }
 
-  void _decrementHealth(BuildContext context, int newHealth) {
-    currentHealth = context.read<HealthCubit>().handleEvent(
-          DecrementHealth(newHealth, playerId!, currentHealth, maxHealth), context,
-        );
+  void _decrementProvision(BuildContext context, int newProvision) {
+    currentProvision = context.read<ProvisionCubit>().handleEvent(
+      DecrementProvision(newProvision, playerId!, currentProvision),
+    );
 
-    // BlocProvider.of<HealthCubit>(context)
-    //     .handleEvent(DecrementHealth(currentHealth - newHealth, playerId!), currentHealth);
+    // BlocProvider.of<ProvisionCubit>(context)
+    //     .handleEvent(DecrementProvision(currentProvision - newProvision, playerId!), currentProvision);
     Navigator.pop(context);
   }
 
-  void _setHealth(BuildContext context, int newHealth) {
-    currentHealth = context.read<HealthCubit>().handleEvent(
-          SetHealth(newHealth, playerId!, maxHealth), context,
-        );
+  void _setProvision(BuildContext context, int newProvision) {
+    currentProvision = context.read<ProvisionCubit>().handleEvent(
+      SetProvision(newProvision, playerId!),
+    );
 
-    // BlocProvider.of<HealthCubit>(context)
-    //     .handleEvent(SetHealth(newHealth, playerId!));
+    // BlocProvider.of<ProvisionCubit>(context)
+    //     .handleEvent(SetProvision(newProvision, playerId!));
     Navigator.pop(context);
   }
 }

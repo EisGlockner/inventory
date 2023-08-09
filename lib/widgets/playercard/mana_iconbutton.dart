@@ -72,6 +72,7 @@ class ManaIcon extends StatelessWidget {
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: false),
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  autofocus: true,
                   onChanged: (value) {
                     newMana = int.tryParse(value) ?? player.mana;
                   },
@@ -87,21 +88,21 @@ class ManaIcon extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
+                  _setMana(context, newMana);
+                },
+                child: const Text('=', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+              ),
+              TextButton(
+                onPressed: () {
                   _incrementMana(context, newMana);
                 },
-                child: const Text('+'),
+                child: const Text('+', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
               ),
               TextButton(
                 onPressed: () {
                   _decrementMana(context, newMana);
                 },
-                child: const Text('-'),
-              ),
-              TextButton(
-                onPressed: () {
-                  _setMana(context, newMana);
-                },
-                child: const Text('='),
+                child: const Text('-', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
               ),
             ],
           );
@@ -126,7 +127,7 @@ class ManaIcon extends StatelessWidget {
 
   void _setMana(BuildContext context, int newMana) {
     currentMana = context.read<ManaCubit>().handleEvent(
-          SetMana(newMana, player, currentMana),
+          SetMana(newMana, player),
         );
     Navigator.pop(context);
   }

@@ -18,10 +18,10 @@ class GroupOverviewBloc
         List<Gruppen> groups = await DBHelper.instance.getGruppen();
         List<Spieler> players = await DBHelper.instance.getSpielerInGruppen();
         String? groupName;
+
         if (lastGroup != null) {
           groupName = await DBHelper.instance.getGruppenName(lastGroup);
         }
-
         emit(PlayerOverviewLoaded(players, groupName, groups));
       } catch (e, stacktrace) {
         print(e);

@@ -2,7 +2,7 @@ class Spieler {
   final int? id;
   final String name;
   final String spielerName;
-  final int leben;
+  int leben;
   final int maxLeben;
   late final int mana;
   final int maxMana;

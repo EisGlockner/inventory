@@ -319,11 +319,12 @@ class DBHelper {
         if (deleteSpieler) {
           await txn.delete('spieler',
               where:
-              'id IN (SELECT spielerId FROM spieler_gruppen WHERE gruppenId = ?)',
+                  'id IN (SELECT spielerId FROM spieler_gruppen WHERE gruppenId = ?)',
               whereArgs: [id]);
         }
         await txn
             .delete('spieler_gruppen', where: 'gruppenId = ?', whereArgs: [id]);
+        return null;
       });
       _closeDatabase(db);
       return null;
@@ -356,12 +357,14 @@ class DBHelper {
 
   Future<int?> updateLeben(int playerId, int newHealth) async {
     Database? db = await _openDatabase();
-    var result = await db.update(
+    var result = await db
+        .update(
       'spieler',
       {'leben': newHealth},
       where: 'id = ?',
       whereArgs: [playerId],
-    ).then((_) {
+    )
+        .then((_) {
       _closeDatabase(db);
     });
     return result;
@@ -369,12 +372,50 @@ class DBHelper {
 
   Future<int?> updateMana(int playerId, int newMana) async {
     Database? db = await _openDatabase();
-    var result = await db.update(
+    var result = await db
+        .update(
       'spieler',
       {'mana': newMana},
       where: 'id = ?',
       whereArgs: [playerId],
-    ).then((_) {
+    )
+        .then((_) {
+      _closeDatabase(db);
+    });
+    return result;
+  }
+
+  Future<int?> updateProviant(int playerId, int newProviant) async {
+    Database? db = await _openDatabase();
+    var result = await db
+        .update(
+      'spieler',
+      {'proviant': newProviant},
+      where: 'id = ?',
+      whereArgs: [playerId],
+    )
+        .then((_) {
+      _closeDatabase(db);
+    });
+    return result;
+  }
+
+  Future<int?> updateMoney(
+      int playerId, List<int> money) async {
+    Database? db = await _openDatabase();
+    var result = await db
+        .update(
+      'spieler',
+      {
+        'dukaten': money[0],
+        'silber': money[1],
+        'heller': money[2],
+        'kreuzer': money[3],
+      },
+      where: 'id = ?',
+      whereArgs: [playerId],
+    )
+        .then((_) {
       _closeDatabase(db);
     });
     return result;

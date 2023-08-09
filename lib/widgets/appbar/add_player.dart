@@ -190,29 +190,29 @@ class AddPlayerDialog {
           ),
         ),
         actions: [
-          BlocBuilder<PlayerFormCubit, Map<String, dynamic>>(
-            builder: (BuildContext context, state) {
-              return TextButton(
-                onPressed: () async {
-                  if (formKey.currentState!.validate()) {
-                    await context
-                        .read<PlayerFormCubit>()
-                        .savePlayer()
-                        .then((value) => context
-                            .read<GroupOverviewBloc>()
-                            .add(LoadPlayers()))
-                        .then((value) => Navigator.of(context).pop());
-                  }
-                },
-                child: const Text('Speichern'),
-              );
-            },
-          ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
             child: const Text('Abbrechen'),
+          ),
+          BlocBuilder<PlayerFormCubit, Map<String, dynamic>>(
+            builder: (BuildContext context, state) {
+              return TextButton(
+                onPressed: () async {
+                  if (formKey.currentState!.validate()) {
+                    await context.read<PlayerFormCubit>().savePlayer().then(
+                      (value) {
+                        context.read<GroupOverviewBloc>().add(LoadPlayers());
+                        Navigator.of(context).pop();
+                        context.read<PlayerFormCubit>().resetForm();
+                      },
+                    );
+                  }
+                },
+                child: const Text('Speichern'),
+              );
+            },
           ),
         ],
       ),
