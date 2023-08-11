@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/group_overview_bloc.dart';
-import '../../bloc/group_overview_events.dart';
+import '../../bloc/group_overview_bloc/group_overview_bloc.dart';
+import '../../bloc/group_overview_bloc/group_overview_events.dart';
 
 class DeleteGruppeDialog extends StatefulWidget {
   const DeleteGruppeDialog({super.key});

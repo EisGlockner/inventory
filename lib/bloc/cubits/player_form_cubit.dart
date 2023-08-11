@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/model.dart';
-import '../data/database_helper.dart';
+import '../../data/model.dart';
+import '../../data/database_helper.dart';
 
 class PlayerFormCubit extends Cubit<Map<String, dynamic>> {
   PlayerFormCubit()
@@ -45,8 +45,10 @@ class PlayerFormCubit extends Cubit<Map<String, dynamic>> {
     final spieler = Spieler(
       name: state['name'],
       spielerName: state['spielerName'],
-      leben: int.parse(state['lep']),
+      leben: int.parse(state['leben']),
+      maxLeben: int.parse(state['leben']),
       mana: int.parse(state['mana']),
+      maxMana: int.parse(state['mana']),
       seelenkraft: int.parse(state['seelenkraft']),
       zaehigkeit: int.parse(state['zaehigkeit']),
       schicksalspunkte: int.parse(state['schicksalspunkte']),
@@ -109,5 +111,37 @@ class PlayerFormCubit extends Cubit<Map<String, dynamic>> {
     DBHelper.instance.insertSpielerAndSpielerStats(spieler, spielerStatsList);
 
     emit({...state, 'isLoading': false});
+  }
+
+  void resetForm() {
+    emit({
+      'name': '',
+      'spielerName': '',
+      'leben': '',
+      'mana': '0',
+      'seelenkraft': '',
+      'zaehigkeit': '',
+      'schicksalspunkte': '',
+      'proviant': '0',
+      'isGlaesern': false,
+      'isEisern': false,
+      'isZaeh': false,
+      'isZerbrechlich': false,
+      'hasAsp': false,
+      'hasKap': false,
+      'kreuzer': '0',
+      'heller': '0',
+      'silber': '0',
+      'dukaten': '0',
+      'isLoading': false,
+      'MU': 8,
+      'KL': 8,
+      'IN': 8,
+      'CH': 8,
+      'FF': 8,
+      'GE': 8,
+      'KO': 8,
+      'KK': 8,
+    });
   }
 }

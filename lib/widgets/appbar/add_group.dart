@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/group_overview_bloc.dart';
-import '../../bloc/group_overview_events.dart';
 import 'package:inventory/misc.dart' as misc;
+import '../../bloc/group_overview_bloc/group_overview_bloc.dart';
+import '../../bloc/group_overview_bloc/group_overview_events.dart';
 
 class AddGroupDialog {
   static Future<void> show(BuildContext context) async {
