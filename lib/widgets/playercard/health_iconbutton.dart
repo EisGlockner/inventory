@@ -113,7 +113,6 @@ class HealthIcon extends StatelessWidget {
           IncrementHealth(
             newHealth,
             playerId!,
-            context.read<HealthCubit>().getPlayerHealth(playerId!),
             maxHealth,
           ),
           context,
@@ -129,7 +128,6 @@ class HealthIcon extends StatelessWidget {
           DecrementHealth(
             newHealth,
             playerId!,
-            context.read<HealthCubit>().getPlayerHealth(playerId!),
             maxHealth,
           ),
           context,
