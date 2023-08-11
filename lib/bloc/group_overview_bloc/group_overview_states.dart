@@ -7,7 +7,7 @@ class PlayerOverviewInitial extends PlayerOverviewState {}
 class PlayerOverviewLoading extends PlayerOverviewState {}
 
 class PlayerOverviewLoaded extends PlayerOverviewState {
-  final List<Spieler> players;
+  List<Spieler> players = [];
   final String? groupName;
   final List<Gruppen> groups;
 

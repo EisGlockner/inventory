@@ -8,10 +8,12 @@ import 'package:inventory/misc.dart' as misc;
 
 class HealthIcon extends StatelessWidget {
   final int? playerId;
-  int currentHealth;
   final int maxHealth;
 
-  HealthIcon({super.key, required this.playerId, required this.currentHealth, required this.maxHealth});
+  HealthIcon(
+      {super.key,
+      required this.playerId,
+      required this.maxHealth});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +30,11 @@ class HealthIcon extends StatelessWidget {
               Inventory.healthpotion,
               color: Colors.red,
             ),
-            BlocBuilder<HealthCubit, HealthState>(builder: (context, state) {
-              return Text(' $currentHealth');
+            BlocBuilder<HealthCubit, List<HealthState>>(
+                builder: (context, state) {
+              final health =
+                  context.read<HealthCubit>().getPlayerHealth(playerId!);
+              return Text(' $health');
             }),
           ],
         ),
@@ -41,19 +46,22 @@ class HealthIcon extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) {
-        int newHealth = currentHealth;
-        return BlocBuilder<HealthCubit, HealthState>(builder: (context, state) {
+        int newHealth = context.read<HealthCubit>().getPlayerHealth(playerId!);
+        ;
+        return BlocBuilder<HealthCubit, List<HealthState>>(
+            builder: (context, state) {
           return AlertDialog(
             title: const Text('Leben bearbeiten'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
-                  keyboardType: const TextInputType.numberWithOptions(decimal: false),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: false),
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   autofocus: true,
                   onChanged: (value) {
-                    newHealth = int.tryParse(value) ?? currentHealth;
+                    newHealth = int.tryParse(value) ?? newHealth;
                   },
                 ),
               ],
@@ -69,19 +77,28 @@ class HealthIcon extends StatelessWidget {
                 onPressed: () {
                   _setHealth(context, newHealth);
                 },
-                child: const Text('=', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+                child: const Text(
+                  '=',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                ),
               ),
               TextButton(
                 onPressed: () {
                   _incrementHealth(context, newHealth);
                 },
-                child: const Text('+', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+                child: const Text(
+                  '+',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                ),
               ),
               TextButton(
                 onPressed: () {
                   _decrementHealth(context, newHealth);
                 },
-                child: const Text('-', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+                child: const Text(
+                  '-',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                ),
               ),
             ],
           );
@@ -92,8 +109,14 @@ class HealthIcon extends StatelessWidget {
 
 // ToDo: Figure out if context.read or BlocProvider.of is better
   void _incrementHealth(BuildContext context, int newHealth) {
-    currentHealth = context.read<HealthCubit>().handleEvent(
-          IncrementHealth(newHealth, playerId!, currentHealth, maxHealth), context,
+    context.read<HealthCubit>().handleEvent(
+          IncrementHealth(
+            newHealth,
+            playerId!,
+            context.read<HealthCubit>().getPlayerHealth(playerId!),
+            maxHealth,
+          ),
+          context,
         );
 
     // BlocProvider.of<HealthCubit>(context)
@@ -102,8 +125,14 @@ class HealthIcon extends StatelessWidget {
   }
 
   void _decrementHealth(BuildContext context, int newHealth) {
-    currentHealth = context.read<HealthCubit>().handleEvent(
-          DecrementHealth(newHealth, playerId!, currentHealth, maxHealth), context,
+    context.read<HealthCubit>().handleEvent(
+          DecrementHealth(
+            newHealth,
+            playerId!,
+            context.read<HealthCubit>().getPlayerHealth(playerId!),
+            maxHealth,
+          ),
+          context,
         );
 
     // BlocProvider.of<HealthCubit>(context)
@@ -112,8 +141,9 @@ class HealthIcon extends StatelessWidget {
   }
 
   void _setHealth(BuildContext context, int newHealth) {
-    currentHealth = context.read<HealthCubit>().handleEvent(
-          SetHealth(newHealth, playerId!, maxHealth), context,
+    context.read<HealthCubit>().handleEvent(
+          SetHealth(newHealth, playerId!, maxHealth),
+          context,
         );
 
     // BlocProvider.of<HealthCubit>(context)

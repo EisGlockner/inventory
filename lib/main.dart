@@ -6,8 +6,8 @@ import 'package:inventory/bloc/cubits/provision_cubit.dart';
 import 'package:inventory/group_overview.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'bloc/AppBloc()/app_bloc.dart';
-import 'bloc/AppBloc()/app_event.dart';
+import 'bloc/AppBloc/app_bloc.dart';
+import 'bloc/AppBloc/app_event.dart';
 import 'bloc/cubits/health_cubit.dart';
 import 'bloc/cubits/mana_cubit.dart';
 import 'bloc/cubits/player_form_cubit.dart';
@@ -36,24 +36,24 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
+        BlocProvider<GroupOverviewBloc>(
           create: (context) => GroupOverviewBloc()..add(LoadPlayers()),
           lazy: false,
         ),
-        BlocProvider(
+        BlocProvider<PlayerFormCubit>(
           create: (context) => PlayerFormCubit(),
         ),
-        BlocProvider(
+        BlocProvider<HealthCubit>(
           create: (context) => HealthCubit(),
         ),
-        BlocProvider(
+        BlocProvider<ManaCubit>(
           create: (context) => ManaCubit(),
         ),
-        BlocProvider(
+        BlocProvider<ProvisionCubit>(
           create: (context) => ProvisionCubit(),
         ),
-        BlocProvider(
-          create: (context) => MoneyCubit() ,
+        BlocProvider<MoneyCubit>(
+          create: (context) => MoneyCubit(),
         ),
       ],
       child: MultiBlocListener(

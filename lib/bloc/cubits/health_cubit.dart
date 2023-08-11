@@ -35,19 +35,37 @@ class SetHealth extends HealthEvent {
 
 // State
 class HealthState {
+  int playerId;
   int health;
 
-  HealthState(this.health);
+  HealthState(this.playerId, this.health);
 }
 
 // Cubit
-class HealthCubit extends Cubit<HealthState> {
-  HealthCubit() : super(HealthState(0));
+class HealthCubit extends Cubit<List<HealthState>> {
+  HealthCubit() : super([]);
+
+  void addPlayer(int playerId, int initialHealth) {
+    final newState = [...state, HealthState(playerId, initialHealth)];
+    emit(newState);
+  }
 
   void updateHealth(int playerId, int newHealth, BuildContext context) {
-    DBHelper.instance.updateLeben(playerId, newHealth).then((_) {
-      emit(HealthState(newHealth));
-    });
+    final updatedState = state.map((healthState) {
+      if (healthState.playerId == playerId) {
+        DBHelper.instance.updateLeben(playerId, newHealth);
+        return HealthState(playerId, newHealth);
+      }
+      return healthState;
+    }).toList();
+
+    emit(updatedState);
+  }
+
+  int getPlayerHealth(int playerId) {
+    final healthState =
+        state.firstWhere((healthState) => healthState.playerId == playerId);
+    return healthState.health;
   }
 
   int handleEvent(HealthEvent event, BuildContext context) {
@@ -61,7 +79,6 @@ class HealthCubit extends Cubit<HealthState> {
         updateHealth(event.playerId, newHealth, context);
         return newHealth;
       }
-
     } else if (event is DecrementHealth) {
       int newHealth = event.currentHealth - event.value;
 
@@ -72,7 +89,6 @@ class HealthCubit extends Cubit<HealthState> {
         updateHealth(event.playerId, newHealth, context);
         return newHealth;
       }
-
     } else if (event is SetHealth) {
       if (event.value >= event.maxHealth) {
         updateHealth(event.playerId, event.maxHealth, context);
@@ -81,7 +97,6 @@ class HealthCubit extends Cubit<HealthState> {
         updateHealth(event.playerId, event.value, context);
         return event.value;
       }
-
     } else {
       return 0;
     }

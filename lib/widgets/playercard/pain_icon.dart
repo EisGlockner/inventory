@@ -6,9 +6,10 @@ import '../../icons/inventory_icons.dart';
 import '../../misc.dart' as misc;
 
 class PainIcon extends StatelessWidget {
-  int currentHealth;
+  final int? playerId;
+  final int maxHealth;
 
-  PainIcon({super.key, required this.currentHealth});
+  PainIcon({super.key, required this.playerId, required this.maxHealth});
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +22,23 @@ class PainIcon extends StatelessWidget {
             Inventory.schmerz,
             color: Colors.white70,
           ),
-          BlocBuilder<HealthCubit, HealthState>(
+          BlocBuilder<HealthCubit, List<HealthState>>(
             builder: (context, state) {
-              return Text(' 0');
+              final int health = context.read<HealthCubit>().getPlayerHealth(playerId!);
+              final int painStage;
+              if (health <= 5) {
+                painStage = 4;
+              } else if ((maxHealth * 0.75).ceil() < health) {
+                painStage = 0;
+              } else if ((maxHealth * 0.5).ceil() < health) {
+                painStage = 1;
+              } else if ((maxHealth * 0.25).ceil() < health) {
+                painStage = 2;
+              } else {
+                painStage = 3;
+              }
+
+              return Text(' $painStage');
             },
           ),
         ],
