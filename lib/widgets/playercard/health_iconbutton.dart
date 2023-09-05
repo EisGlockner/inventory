@@ -10,10 +10,7 @@ class HealthIcon extends StatelessWidget {
   final int? playerId;
   final int maxHealth;
 
-  HealthIcon(
-      {super.key,
-      required this.playerId,
-      required this.maxHealth});
+  HealthIcon({super.key, required this.playerId, required this.maxHealth});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +44,6 @@ class HealthIcon extends StatelessWidget {
       context: context,
       builder: (context) {
         int newHealth = context.read<HealthCubit>().getPlayerHealth(playerId!);
-        ;
         return BlocBuilder<HealthCubit, List<HealthState>>(
             builder: (context, state) {
           return AlertDialog(
@@ -110,12 +106,7 @@ class HealthIcon extends StatelessWidget {
 // ToDo: Figure out if context.read or BlocProvider.of is better
   void _incrementHealth(BuildContext context, int newHealth) {
     context.read<HealthCubit>().handleEvent(
-          IncrementHealth(
-            newHealth,
-            playerId!,
-            maxHealth,
-          ),
-          context,
+          IncrementHealth(newHealth, playerId!, maxHealth),
         );
 
     // BlocProvider.of<HealthCubit>(context)
@@ -125,12 +116,7 @@ class HealthIcon extends StatelessWidget {
 
   void _decrementHealth(BuildContext context, int newHealth) {
     context.read<HealthCubit>().handleEvent(
-          DecrementHealth(
-            newHealth,
-            playerId!,
-            maxHealth,
-          ),
-          context,
+          DecrementHealth(newHealth, playerId!, maxHealth),
         );
 
     // BlocProvider.of<HealthCubit>(context)
@@ -141,7 +127,6 @@ class HealthIcon extends StatelessWidget {
   void _setHealth(BuildContext context, int newHealth) {
     context.read<HealthCubit>().handleEvent(
           SetHealth(newHealth, playerId!, maxHealth),
-          context,
         );
 
     // BlocProvider.of<HealthCubit>(context)

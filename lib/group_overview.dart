@@ -13,7 +13,7 @@ class PlayerOverview extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey.shade400,
       appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(50),
+        preferredSize: Size.fromHeight(kToolbarHeight),
         child: MyAppBar(),
       ),
       body: SingleChildScrollView(

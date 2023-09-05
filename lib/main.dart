@@ -60,7 +60,9 @@ class MyApp extends StatelessWidget {
         listeners: [
           BlocListener<GroupOverviewBloc, PlayerOverviewState>(
             listener: (context, state) {
-              if (state is GroupAdded || state is GroupDeleted) {
+              if (state is GroupAdded ||
+                  state is GroupDeleted ||
+                  state is PlayerDeleted) {
                 context.read<GroupOverviewBloc>().add(LoadPlayers());
               }
             },

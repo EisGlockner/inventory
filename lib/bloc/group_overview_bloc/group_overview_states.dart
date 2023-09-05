@@ -19,3 +19,5 @@ class PlayerOverviewError extends PlayerOverviewState {}
 class GroupAdded extends PlayerOverviewState {}
 
 class GroupDeleted extends PlayerOverviewState {}
+
+class PlayerDeleted extends PlayerOverviewState {}

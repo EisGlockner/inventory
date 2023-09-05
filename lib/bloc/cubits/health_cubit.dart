@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory/data/database_helper.dart';
 
@@ -48,7 +47,7 @@ class HealthCubit extends Cubit<List<HealthState>> {
     emit(newState);
   }
 
-  void updateHealth(int playerId, int newHealth, BuildContext context) {
+  void updateHealth(int playerId, int newHealth) {
     final updatedState = state.map((healthState) {
       if (healthState.playerId == playerId) {
         DBHelper.instance.updateLeben(playerId, newHealth);
@@ -66,27 +65,27 @@ class HealthCubit extends Cubit<List<HealthState>> {
     return healthState.health;
   }
 
-  void handleEvent(HealthEvent event, BuildContext context) {
+  void handleEvent(HealthEvent event) {
     if (event is IncrementHealth) {
       int newHealth = getPlayerHealth(event.playerId) + event.value;
       if (newHealth >= event.maxHealth) {
-        updateHealth(event.playerId, event.maxHealth, context);
+        updateHealth(event.playerId, event.maxHealth);
       } else {
-        updateHealth(event.playerId, newHealth, context);
+        updateHealth(event.playerId, newHealth);
       }
     } else if (event is DecrementHealth) {
       int newHealth = getPlayerHealth(event.playerId) - event.value;
 
       if (newHealth < 0) {
-        updateHealth(event.playerId, 0, context);
+        updateHealth(event.playerId, 0);
       } else {
-        updateHealth(event.playerId, newHealth, context);
+        updateHealth(event.playerId, newHealth);
       }
     } else if (event is SetHealth) {
       if (event.value >= event.maxHealth) {
-        updateHealth(event.playerId, event.maxHealth, context);
+        updateHealth(event.playerId, event.maxHealth);
       } else {
-        updateHealth(event.playerId, event.value, context);
+        updateHealth(event.playerId, event.value);
       }
     }
   }

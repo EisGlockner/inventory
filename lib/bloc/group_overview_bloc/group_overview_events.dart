@@ -13,3 +13,9 @@ class DeleteGroup extends PlayerOverviewEvent {
 
   DeleteGroup(this.deleteSpieler);
 }
+
+class DeletePlayer extends PlayerOverviewEvent {
+  final int playerId;
+
+  DeletePlayer(this.playerId);
+}
