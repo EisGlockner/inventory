@@ -8,10 +8,10 @@ class DeleteGruppeDialog extends StatefulWidget {
   const DeleteGruppeDialog({super.key});
 
   @override
-  DeleteGruppeDialogState createState() => DeleteGruppeDialogState();
+  DeleteGroupDialogState createState() => DeleteGroupDialogState();
 }
 
-class DeleteGruppeDialogState extends State<DeleteGruppeDialog> {
+class DeleteGroupDialogState extends State<DeleteGruppeDialog> {
   bool deleteSpieler = false;
 
   @override
@@ -21,7 +21,7 @@ class DeleteGruppeDialogState extends State<DeleteGruppeDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text('Möchten Sie die Gruppe wirklich löschen?'),
+          const Text('Möchtest du die Gruppe wirklich löschen?'),
           CheckboxListTile(
             title: const Text('Auch Spieler löschen'),
             value: deleteSpieler,

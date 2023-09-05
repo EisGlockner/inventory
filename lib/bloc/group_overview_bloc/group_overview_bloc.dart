@@ -60,5 +60,15 @@ class GroupOverviewBloc
         emit(PlayerOverviewError());
       }
     });
+
+    on<DeletePlayer>((event, emit) async{
+      try{
+        await DBHelper.instance.deleteSpieler(event.playerId);
+        emit(PlayerDeleted());
+      } catch(e) {
+        print(e);
+        emit(PlayerOverviewError());
+      }
+    });
   }
 }
