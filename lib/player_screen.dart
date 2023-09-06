@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:inventory/data/database_helper.dart';
 import 'package:inventory/data/model.dart';
 import 'package:inventory/widgets/player_screen/player_appbar.dart';
+import 'package:inventory/widgets/playercard/health_iconbutton.dart';
+import 'package:inventory/widgets/playercard/mana_iconbutton.dart';
+import 'package:inventory/widgets/playercard/money_iconbutton.dart';
+import 'package:inventory/widgets/playercard/pain_icon.dart';
+import 'package:inventory/widgets/playercard/provision_iconbutton.dart';
 
 class PlayerScreen extends StatelessWidget {
   final Spieler player;
@@ -15,8 +21,120 @@ class PlayerScreen extends StatelessWidget {
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: PlayerAppBar(playerId: player.id!),
       ),
-      body: Container(
-        child: Text('bla'),
+      body: Column(
+        children: [
+          Center(
+            child: Text(
+              player.name,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+          ),
+          const Padding(padding: EdgeInsets.only(top: 10)),
+          Center(child: Text(player.spielerName)),
+          const Padding(padding: EdgeInsets.only(top: 30)),
+          FutureBuilder<List<SpielerStats>>(
+            future: DBHelper.instance.getSpielerStats(player.id!),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return const Text('Fehler beim Laden der Daten');
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Text('Keine Daten verfügbar');
+              } else {
+                return SizedBox(
+                  height: _calculateGridViewHeight(
+                    snapshot.data!.length,
+                    MediaQuery.of(context).size.width < 900 ? 4 : 8,
+                  ),
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount:
+                          MediaQuery.of(context).size.width < 900 ? 4 : 8,
+                      childAspectRatio: 2,
+                    ),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final List<String> stats = [
+                        'MU',
+                        'KL',
+                        'IN',
+                        'CH',
+                        'FF',
+                        'GE',
+                        'KO',
+                        'KK'
+                      ];
+                      return _buildStatCard(
+                          stats[index], snapshot.data![index].wert);
+                    },
+                  ),
+                );
+              }
+            },
+          ),
+          const Padding(padding: EdgeInsets.only(top: 40)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              HealthIcon(
+                playerId: player.id,
+                maxHealth: player.maxLeben,
+              ),
+              ManaIcon(
+                player: player,
+                currentMana: player.mana,
+              ),
+              PainIcon(
+                playerId: player.id,
+                maxHealth: player.maxLeben,
+              ),
+              ProvisionIcon(
+                playerId: player.id,
+                currentProvision: player.proviant,
+              ),
+            ],
+          ),
+          const Padding(padding: EdgeInsets.only(top: 40)),
+          MoneyIcon(
+            money: [
+              player.dukaten,
+              player.silber,
+              player.heller,
+              player.kreuzer,
+            ],
+            playerId: player.id,
+          ),
+        ],
+      ),
+    );
+  }
+
+  double _calculateGridViewHeight(int itemCount, axisCount) {
+    int rowCount = (itemCount / axisCount).ceil();
+    return 50.0 * rowCount.toDouble();
+  }
+
+  Widget _buildStatCard(String statName, int statValue) {
+    return Card(
+      color: Colors.transparent,
+      elevation: 0,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            statName,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            statValue.toString(),
+            style: const TextStyle(
+              fontSize: 16,
+            ),
+          ),
+        ],
       ),
     );
   }

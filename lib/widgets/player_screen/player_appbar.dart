@@ -15,14 +15,14 @@ class PlayerAppBar extends StatelessWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black),
+        icon: const Icon(Icons.arrow_back),
         onPressed: () {
           Navigator.pop(context);
         },
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.delete_forever, color: Colors.black),
+          icon: const Icon(Icons.delete_forever),
           onPressed: () {
             showDialog(
               context: context,
@@ -47,15 +47,20 @@ class PlayerAppBar extends StatelessWidget {
                       context
                           .read<GroupOverviewBloc>()
                           .add(DeletePlayer(playerId));
-                      Navigator.of(context)
-                          .popUntil((route) => route.isFirst);
+                      Navigator.popUntil(context, (route) => route.isFirst);
                     },
                   ),
                 ],
               ),
             );
           },
-        )
+        ),
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () {
+            //ToDo: add Skills to the character
+          },
+        ),
       ],
     );
   }

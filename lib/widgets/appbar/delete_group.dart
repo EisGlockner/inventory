@@ -44,7 +44,7 @@ class DeleteGroupDialogState extends State<DeleteGruppeDialog> {
           child: const Text('Löschen'),
           onPressed: () {
             context.read<GroupOverviewBloc>().add(DeleteGroup(deleteSpieler));
-            Navigator.of(context).pop(context);
+            Navigator.of(context).popUntil((route) => route.isFirst);
           },
         ),
       ],

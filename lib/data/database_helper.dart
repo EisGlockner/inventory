@@ -178,9 +178,11 @@ class DBHelper {
   }
 
   // get data from the table spieler_stats
-  Future<List<SpielerStats>> getSpielerStats() async {
+  Future<List<SpielerStats>> getSpielerStats(int playerId) async {
     Database? db = await _openDatabase();
-    List<Map>? maps = (await db.query('spieler_stats')).cast<Map>();
+    List<Map>? maps = (await db.query('spieler_stats',
+            where: 'spieler_id = ?', whereArgs: [playerId]))
+        .cast<Map>();
     await _closeDatabase(db);
     if (maps.isNotEmpty) {
       return List.generate(maps.length, (i) {
@@ -360,12 +362,14 @@ class DBHelper {
   // update life of player
   Future<int?> updateLeben(int playerId, int newHealth) async {
     Database? db = await _openDatabase();
-    var result = await db.update(
+    var result = await db
+        .update(
       'spieler',
       {'leben': newHealth},
       where: 'id = ?',
       whereArgs: [playerId],
-    ).then((_) {
+    )
+        .then((_) {
       _closeDatabase(db);
     });
     return result;
@@ -374,12 +378,14 @@ class DBHelper {
   // update mana of player
   Future<int?> updateMana(int playerId, int newMana) async {
     Database? db = await _openDatabase();
-    var result = await db.update(
+    var result = await db
+        .update(
       'spieler',
       {'mana': newMana},
       where: 'id = ?',
       whereArgs: [playerId],
-    ).then((_) {
+    )
+        .then((_) {
       _closeDatabase(db);
     });
     return result;
@@ -388,20 +394,21 @@ class DBHelper {
   // update proviant of player
   Future<int?> updateProviant(int playerId, int newProviant) async {
     Database? db = await _openDatabase();
-    var result = await db.update(
+    var result = await db
+        .update(
       'spieler',
       {'proviant': newProviant},
       where: 'id = ?',
       whereArgs: [playerId],
-    ).then((_) {
+    )
+        .then((_) {
       _closeDatabase(db);
     });
     return result;
   }
 
   // update money of player
-  Future<int?> updateMoney(
-      int playerId, List<int> money) async {
+  Future<int?> updateMoney(int playerId, List<int> money) async {
     Database? db = await _openDatabase();
     var result = await db
         .update(
@@ -414,7 +421,8 @@ class DBHelper {
       },
       where: 'id = ?',
       whereArgs: [playerId],
-    ).then((_) {
+    )
+        .then((_) {
       _closeDatabase(db);
     });
     return result;
