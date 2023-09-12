@@ -58,29 +58,33 @@ class ProvisionIcon extends StatelessWidget {
               ],
             ),
             actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Abbrechen'),
-              ),
-              TextButton(
-                onPressed: () {
-                  _setProvision(context, newProvision);
-                },
-                child: const Text('=', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
-              ),
-              TextButton(
-                onPressed: () {
-                  _incrementProvision(context, newProvision);
-                },
-                child: const Text('+', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
-              ),
-              TextButton(
-                onPressed: () {
-                  _decrementProvision(context, newProvision);
-                },
-                child: const Text('-', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+              OverflowBar(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Abbrechen'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _setProvision(context, newProvision);
+                    },
+                    child: const Text('=', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _incrementProvision(context, newProvision);
+                    },
+                    child: const Text('+', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _decrementProvision(context, newProvision);
+                    },
+                    child: const Text('-', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+                  ),
+                ],
               ),
             ],
           );

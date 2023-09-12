@@ -80,29 +80,33 @@ class ManaIcon extends StatelessWidget {
               ],
             ),
             actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Abbrechen'),
-              ),
-              TextButton(
-                onPressed: () {
-                  _setMana(context, newMana);
-                },
-                child: const Text('=', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
-              ),
-              TextButton(
-                onPressed: () {
-                  _incrementMana(context, newMana);
-                },
-                child: const Text('+', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
-              ),
-              TextButton(
-                onPressed: () {
-                  _decrementMana(context, newMana);
-                },
-                child: const Text('-', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+              OverflowBar(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Abbrechen'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _setMana(context, newMana);
+                    },
+                    child: const Text('=', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _incrementMana(context, newMana);
+                    },
+                    child: const Text('+', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _decrementMana(context, newMana);
+                    },
+                    child: const Text('-', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+                  ),
+                ],
               ),
             ],
           );

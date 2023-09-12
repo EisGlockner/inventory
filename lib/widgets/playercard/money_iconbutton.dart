@@ -98,38 +98,42 @@ class MoneyIcon extends StatelessWidget {
             ],
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Abbrechen'),
-            ),
-            TextButton(
-              onPressed: () {
-                _setMoney(context, newMoney);
-              },
-              child: const Text(
-                '=',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                _incrementMoney(context, newMoney);
-              },
-              child: const Text(
-                '+',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                _decrementMoney(context, newMoney);
-              },
-              child: const Text(
-                '-',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-              ),
+            OverflowBar(
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Abbrechen'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    _setMoney(context, newMoney);
+                  },
+                  child: const Text(
+                    '=',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    _incrementMoney(context, newMoney);
+                  },
+                  child: const Text(
+                    '+',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    _decrementMoney(context, newMoney);
+                  },
+                  child: const Text(
+                    '-',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                  ),
+                ),
+              ],
             ),
           ],
         );

@@ -63,38 +63,42 @@ class HealthIcon extends StatelessWidget {
               ],
             ),
             actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Abbrechen'),
-              ),
-              TextButton(
-                onPressed: () {
-                  _setHealth(context, newHealth);
-                },
-                child: const Text(
-                  '=',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  _incrementHealth(context, newHealth);
-                },
-                child: const Text(
-                  '+',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  _decrementHealth(context, newHealth);
-                },
-                child: const Text(
-                  '-',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-                ),
+              OverflowBar(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Abbrechen'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _setHealth(context, newHealth);
+                    },
+                    child: const Text(
+                      '=',
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _incrementHealth(context, newHealth);
+                    },
+                    child: const Text(
+                      '+',
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _decrementHealth(context, newHealth);
+                    },
+                    child: const Text(
+                      '-',
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                    ),
+                  ),
+                ],
               ),
             ],
           );

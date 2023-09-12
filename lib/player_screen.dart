@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:inventory/data/database_helper.dart';
 import 'package:inventory/data/model.dart';
 import 'package:inventory/widgets/player_screen/player_appbar.dart';
-import 'package:inventory/widgets/playercard/health_iconbutton.dart';
-import 'package:inventory/widgets/playercard/mana_iconbutton.dart';
-import 'package:inventory/widgets/playercard/money_iconbutton.dart';
-import 'package:inventory/widgets/playercard/pain_icon.dart';
-import 'package:inventory/widgets/playercard/provision_iconbutton.dart';
 
 class PlayerScreen extends StatelessWidget {
   final Spieler player;
@@ -73,38 +68,10 @@ class PlayerScreen extends StatelessWidget {
               }
             },
           ),
-          const Padding(padding: EdgeInsets.only(top: 40)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              HealthIcon(
-                playerId: player.id,
-                maxHealth: player.maxLeben,
-              ),
-              ManaIcon(
-                player: player,
-                currentMana: player.mana,
-              ),
-              PainIcon(
-                playerId: player.id,
-                maxHealth: player.maxLeben,
-              ),
-              ProvisionIcon(
-                playerId: player.id,
-                currentProvision: player.proviant,
-              ),
-            ],
-          ),
-          const Padding(padding: EdgeInsets.only(top: 40)),
-          MoneyIcon(
-            money: [
-              player.dukaten,
-              player.silber,
-              player.heller,
-              player.kreuzer,
-            ],
-            playerId: player.id,
-          ),
+          const Padding(padding: EdgeInsets.only(top: 20)),
+          const Divider(color: Colors.black, thickness: 1,),
+          const Padding(padding: EdgeInsets.only(top: 20)),
+
         ],
       ),
     );
