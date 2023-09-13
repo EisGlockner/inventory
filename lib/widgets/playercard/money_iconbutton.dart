@@ -19,9 +19,13 @@ class MoneyIcon extends StatelessWidget {
       onTap: () {
         _showMoneyDialog(context);
       },
-      child: BlocBuilder<MoneyCubit, MoneyState>(builder: (context, state) {
-        return Text('${money[0]}D ${money[1]}S ${money[2]}H ${money[3]}K');
-      }),
+      child: Container(
+        alignment: Alignment.center,
+        height: 25,
+        child: BlocBuilder<MoneyCubit, MoneyState>(builder: (context, state) {
+          return Text('${money[0]}D ${money[1]}S ${money[2]}H ${money[3]}K');
+        }),
+      ),
     );
   }
 

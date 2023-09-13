@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/AppBloc/app_bloc.dart';
 import 'bloc/AppBloc/app_event.dart';
+import 'bloc/cubits/ability_selection_cubit.dart';
 import 'bloc/cubits/health_cubit.dart';
 import 'bloc/cubits/mana_cubit.dart';
 import 'bloc/cubits/player_form_cubit.dart';
@@ -55,6 +56,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<MoneyCubit>(
           create: (context) => MoneyCubit(),
         ),
+        BlocProvider<AbilitySelectionCubit>(
+          create: (context) => AbilitySelectionCubit(59),
+        )
       ],
       child: MultiBlocListener(
         listeners: [

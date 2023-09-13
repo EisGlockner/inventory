@@ -149,11 +149,11 @@ class SpielerStats {
   }
 }
 
-class Fertigkeiten {
+class Fertigkeit {
   final int id;
   final String name;
 
-  Fertigkeiten({
+  Fertigkeit({
     required this.id,
     required this.name,
   });
@@ -165,8 +165,8 @@ class Fertigkeiten {
     };
   }
 
-  factory Fertigkeiten.fromMap(Map<String, dynamic> map) {
-    return Fertigkeiten(
+  factory Fertigkeit.fromMap(Map<String, dynamic> map) {
+    return Fertigkeit(
       id: map['id'],
       name: map['name'],
     );

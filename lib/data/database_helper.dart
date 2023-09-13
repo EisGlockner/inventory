@@ -78,13 +78,18 @@ class DBHelper {
 
   // insert data into table spieler_fertigkeiten
   Future<int?> insertSpielerFertigkeiten(
-      SpielerFertigkeiten spielerFertigkeiten) async {
+      List<SpielerFertigkeiten> spielerFertigkeiten) async {
     Database? db = await _openDatabase();
-    var result = await db
-        .insert('spieler_fertigkeiten', spielerFertigkeiten.toMap())
-        .then((_) {
-      _closeDatabase(db);
+    int? result;
+
+    await db.transaction((txn) async {
+      for (SpielerFertigkeiten sf in spielerFertigkeiten) {
+        result = await txn.insert('spieler_fertigkeiten', sf.toMap());
+      }
     });
+
+    _closeDatabase(db);
+
     return result;
   }
 
@@ -163,6 +168,48 @@ class DBHelper {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getFertigkeitValue(int playerId) async {
+    Database? db = await _openDatabase();
+
+    final List<Map<String, dynamic>> playerData = await db.rawQuery('''
+    SELECT
+    fs.fertigkeit_id,
+    f.name AS fertigkeit_name,
+    sf.wert AS spieler_fertigkeit_wert,
+    s1.name AS stat1_name,
+    ss1.wert AS spieler_stat1_wert,
+    s2.name AS stat2_name,
+    ss2.wert AS spieler_stat2_wert,
+    s3.name AS stat3_name,
+    ss3.wert AS spieler_stat3_wert
+    FROM spieler spi
+    INNER JOIN
+        spieler_fertigkeiten sf ON spi.id = sf.spieler_id
+    INNER JOIN
+        fertigkeiten_stats fs ON sf.fertigkeit_id = fs.fertigkeit_id
+    INNER JOIN
+        fertigkeiten f ON fs.fertigkeit_id = f.id
+    LEFT JOIN
+        spieler_stats ss1 ON spi.id = ss1.spieler_id AND fs.stat1_id = ss1.stat_id
+    LEFT JOIN
+        spieler_stats ss2 ON spi.id = ss2.spieler_id AND fs.stat2_id = ss2.stat_id
+    LEFT JOIN
+        spieler_stats ss3 ON spi.id = ss3.spieler_id AND fs.stat3_id = ss3.stat_id
+    LEFT JOIN
+        stats s1 ON fs.stat1_id = s1.id
+    LEFT JOIN
+        stats s2 ON fs.stat2_id = s2.id
+    LEFT JOIN
+        stats s3 ON fs.stat3_id = s3.id
+WHERE
+    spi.id = ?
+  ''', [playerId]);
+
+    await db.close();
+
+    return playerData;
+  }
+
   // get data from the table stats
   Future<List<Stats>> getStats() async {
     Database? db = await _openDatabase();
@@ -194,13 +241,13 @@ class DBHelper {
   }
 
   // get data from the table fertigkeiten
-  Future<List<Fertigkeiten>> getFertigkeiten() async {
+  Future<List<Fertigkeit>> getFertigkeiten() async {
     Database? db = await _openDatabase();
     List<Map>? maps = (await db.query('fertigkeiten')).cast<Map>();
     await _closeDatabase(db);
     if (maps.isNotEmpty) {
       return List.generate(maps.length, (i) {
-        return Fertigkeiten.fromMap(Map<String, dynamic>.from(maps[i]));
+        return Fertigkeit.fromMap(Map<String, dynamic>.from(maps[i]));
       });
     } else {
       return [];
