@@ -10,7 +10,7 @@ class HealthIcon extends StatelessWidget {
   final int? playerId;
   final int maxHealth;
 
-  HealthIcon({super.key, required this.playerId, required this.maxHealth});
+  const HealthIcon({super.key, required this.playerId, required this.maxHealth});
 
   @override
   Widget build(BuildContext context) {

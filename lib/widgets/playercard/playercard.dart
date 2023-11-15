@@ -20,9 +20,7 @@ class GroupOverviewPlayer extends StatelessWidget {
       builder: (context, state) {
         final healthCubit = context.read<HealthCubit>();
         if (state is PlayerOverviewLoading) {
-          return const CircularProgressIndicator(
-            color: Colors.grey,
-          );
+          return const SizedBox.shrink();
         } else if (state is PlayerOverviewLoaded) {
           if (state.players.isNotEmpty) {
             return Column(

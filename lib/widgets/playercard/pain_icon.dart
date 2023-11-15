@@ -9,7 +9,7 @@ class PainIcon extends StatelessWidget {
   final int? playerId;
   final int maxHealth;
 
-  PainIcon({super.key, required this.playerId, required this.maxHealth});
+  const PainIcon({super.key, required this.playerId, required this.maxHealth});
 
   @override
   Widget build(BuildContext context) {

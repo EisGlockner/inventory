@@ -11,7 +11,7 @@ class AbilityCard extends StatelessWidget {
   final CardInfo cardInfo;
   final TextEditingController textController = TextEditingController();
 
-  AbilityCard({required this.data, required this.index, required this.cardInfo});
+  AbilityCard({super.key, required this.data, required this.index, required this.cardInfo});
 
   @override
   Widget build(BuildContext context) {

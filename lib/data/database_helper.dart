@@ -334,8 +334,13 @@ WHERE
   // delete a player
   Future<int?> deleteSpieler(int id) async {
     Database? db = await _openDatabase();
-    var result = await db.delete('spieler', where: 'id = ?', whereArgs: [id]);
-    _closeDatabase(db);
+    var result = await db.transaction((txn) async {
+      await txn.delete('spieler', where: 'id = ?', whereArgs: [id]);
+      await txn.delete('spieler_fertigkeiten', where: 'spieler_id = ?', whereArgs: [id]);
+      await txn.delete('spieler_gruppen', where: 'spielerId = ?', whereArgs: [id]);
+      await txn.delete('spieler_stats', where: 'spieler_id = ?', whereArgs: [id]);
+    });
+    await _closeDatabase(db);
     return result;
   }
 

@@ -66,7 +66,7 @@ class PlayerAppBar extends StatelessWidget {
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: Text('Fertigkeit hinzufügen'),
+                title: const Text('Fertigkeit hinzufügen'),
                 content: SizedBox(
                   width: double.maxFinite,
                   height: double.maxFinite,
@@ -83,9 +83,9 @@ class PlayerAppBar extends StatelessWidget {
                           },
                         );
                       } else if (snapshot.hasError) {
-                        return Placeholder();
+                        return const Center(child: Text('Error'));
                       } else {
-                        return Placeholder();
+                        return const SizedBox.shrink();
                       }
                     },
                   ),

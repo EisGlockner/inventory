@@ -12,7 +12,7 @@ class PlayerOverviewTitle extends StatelessWidget {
     return BlocBuilder<GroupOverviewBloc, PlayerOverviewState>(
       builder: (context, state) {
         if (state is PlayerOverviewLoading) {
-          return const CircularProgressIndicator(color: Colors.grey,);
+          return const SizedBox.shrink();
         } else if (state is PlayerOverviewLoaded) {
           if (state.groupName != null) {
             return Center(

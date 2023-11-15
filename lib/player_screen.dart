@@ -32,7 +32,7 @@ class PlayerScreen extends StatelessWidget {
               future: DBHelper.instance.getSpielerStats(player.id!),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return const SizedBox.shrink();
                 } else if (snapshot.hasError) {
                   return const Text('Fehler beim Laden der Daten');
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -96,7 +96,7 @@ class PlayerScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
               child: SizedBox(
                 width: double.maxFinite,
                 height: double.maxFinite,
@@ -121,13 +121,13 @@ class PlayerScreen extends StatelessWidget {
                                       children: [
                                         Text(
                                           data[index]['stat1_name'].toString(),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         Text(
                                           data[index]['spieler_stat1_wert'].toString(),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 16,
                                           ),
                                         ),
@@ -138,13 +138,13 @@ class PlayerScreen extends StatelessWidget {
                                       children: [
                                         Text(
                                           data[index]['stat2_name'].toString(),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         Text(
                                           data[index]['spieler_stat2_wert'].toString(),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 16,
                                           ),
                                         ),
@@ -155,13 +155,13 @@ class PlayerScreen extends StatelessWidget {
                                       children: [
                                         Text(
                                           data[index]['stat3_name'].toString(),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         Text(
                                           data[index]['spieler_stat3_wert'].toString(),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 16,
                                           ),
                                         ),
@@ -172,7 +172,7 @@ class PlayerScreen extends StatelessWidget {
                               );
                             });
                       } else {
-                        return Placeholder();
+                        return const Placeholder();
                       }
                     }),
               ),

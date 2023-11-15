@@ -28,6 +28,7 @@ class AddPlayerDialog {
       String label,
       String field,
       bool isDecimal,
+      bool isRequiredField,
     ) {
       return BlocBuilder<PlayerFormCubit, Map<String, dynamic>>(
         builder: (context, state) {
@@ -44,10 +45,10 @@ class AddPlayerDialog {
               context.read<PlayerFormCubit>().updateField(field, value);
             },
             validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Pflichtfeld';
-              }
-              return null;
+                if (isRequiredField && (value == null || value.isEmpty)) {
+                  return 'Pflichtfeld';
+                }
+                return null;
             },
           );
         },
@@ -98,11 +99,7 @@ class AddPlayerDialog {
           child: BlocBuilder<PlayerFormCubit, Map<String, dynamic>>(
             builder: (context, state) {
               if (state['isLoading']) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.grey,
-                  ),
-                );
+                return const SizedBox.shrink();
               }
               return Form(
                 key: formKey,
@@ -110,17 +107,17 @@ class AddPlayerDialog {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      myTextFormField(nameController, 'Name', 'name', false),
+                      myTextFormField(nameController, 'Name', 'name', false, true),
                       myTextFormField(playerNameController, 'Spielername',
-                          'spielerName', false),
-                      myTextFormField(lebenController, 'Lep', 'leben', true),
-                      myTextFormField(manaController, 'Mana', 'mana', true),
+                          'spielerName', false, true),
+                      myTextFormField(lebenController, 'Lep', 'leben', true, true),
+                      myTextFormField(manaController, 'Mana', 'mana', true, true),
                       myTextFormField(seelenkraftController, 'Seelenkraft',
-                          'seelenkraft', true),
+                          'seelenkraft', true, true),
                       myTextFormField(zaehigkeitController, 'Zähigkeit',
-                          'zaehigkeit', true),
+                          'zaehigkeit', true, true),
                       myTextFormField(schicksalspunkteController,
-                          'Schicksalspunkte', 'schicksalspunkte', true),
+                          'Schicksalspunkte', 'schicksalspunkte', true, true),
                       const Padding(padding: EdgeInsets.only(top: 25)),
                       Row(
                         children: [
@@ -168,13 +165,13 @@ class AddPlayerDialog {
                       ),
                       const Padding(padding: EdgeInsets.only(top: 25)),
                       myTextFormField(
-                          kreuzerController, 'Kreuzer', 'kreuzer', true),
+                          kreuzerController, 'Kreuzer', 'kreuzer', true, false),
                       myTextFormField(
-                          hellerController, 'Heller', 'heller', true),
+                          hellerController, 'Heller', 'heller', true, false),
                       myTextFormField(
-                          silberController, 'Silber', 'silber', true),
+                          silberController, 'Silber', 'silber', true, false),
                       myTextFormField(
-                          dukatenController, 'Dukaten', 'dukaten', true),
+                          dukatenController, 'Dukaten', 'dukaten', true, false),
                       const Padding(padding: EdgeInsets.only(top: 25)),
                       myCheckboxListTile('isGlaesern', 'Gläsern'),
                       myCheckboxListTile('isEisern', 'Eisern'),
