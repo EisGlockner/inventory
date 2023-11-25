@@ -36,10 +36,9 @@ class DBHelper {
         await Directory(dirname(path)).create(recursive: true);
       } catch (_) {}
 
-      ByteData data = await rootBundle.load(join("assets", "inventoryDB.db"));
+      ByteData data = await rootBundle.load(join("assets", "InventoryDB.db"));
       List<int> bytes =
           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-
       await File(path).writeAsBytes(bytes, flush: true);
     } else {
       print("Opening existing database");
