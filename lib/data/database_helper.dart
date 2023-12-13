@@ -336,9 +336,12 @@ WHERE
     Database? db = await _openDatabase();
     var result = await db.transaction((txn) async {
       await txn.delete('spieler', where: 'id = ?', whereArgs: [id]);
-      await txn.delete('spieler_fertigkeiten', where: 'spieler_id = ?', whereArgs: [id]);
-      await txn.delete('spieler_gruppen', where: 'spielerId = ?', whereArgs: [id]);
-      await txn.delete('spieler_stats', where: 'spieler_id = ?', whereArgs: [id]);
+      await txn.delete('spieler_fertigkeiten',
+          where: 'spieler_id = ?', whereArgs: [id]);
+      await txn
+          .delete('spieler_gruppen', where: 'spielerId = ?', whereArgs: [id]);
+      await txn
+          .delete('spieler_stats', where: 'spieler_id = ?', whereArgs: [id]);
     });
     await _closeDatabase(db);
     return result;

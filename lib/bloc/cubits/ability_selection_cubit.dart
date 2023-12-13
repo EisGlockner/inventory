@@ -42,7 +42,7 @@ class AbilitySelectionCubit extends Cubit<List<CardInfo>> {
     emit(updatedState);
   }
 
-  void saveSelectedAbilitys(int playerId) {
+  void saveSelectedAbilities(int playerId) {
     final List<CardInfo> currentState = state;
     List<SpielerFertigkeiten> sf = [];
 
@@ -61,7 +61,7 @@ class AbilitySelectionCubit extends Cubit<List<CardInfo>> {
   void resetState() {
     emit(List<CardInfo>.generate(
       state.length,
-          (index) => CardInfo(
+      (index) => CardInfo(
         index: index,
         value: 0,
         isSelected: false,

@@ -101,7 +101,7 @@ class PlayerAppBar extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () {
-                          abilitySelectionCubit.saveSelectedAbilitys(playerId);
+                          abilitySelectionCubit.saveSelectedAbilities(playerId);
                           abilitySelectionCubit.resetState();
                           Navigator.pop(context);
                         },

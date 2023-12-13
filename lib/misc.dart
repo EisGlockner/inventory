@@ -8,4 +8,4 @@ double scrH(BuildContext context, num value) {
   return MediaQuery.of(context).size.height * value;
 }
 
-const String currentGroup = 'currentGroup';
+const String currentGroup = 'currentGroup';//UwU du Hurensohn

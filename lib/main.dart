@@ -1,13 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:inventory/bloc/ability_bloc/ability_bloc.dart';
 import 'package:inventory/bloc/cubits/money_cubit.dart';
 import 'package:inventory/bloc/cubits/provision_cubit.dart';
 import 'package:inventory/group_overview.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'bloc/AppBloc/app_bloc.dart';
-import 'bloc/AppBloc/app_event.dart';
+import 'bloc/app_bloc/app_bloc.dart';
+import 'bloc/app_bloc/app_event.dart';
 import 'bloc/cubits/ability_selection_cubit.dart';
 import 'bloc/cubits/health_cubit.dart';
 import 'bloc/cubits/mana_cubit.dart';
@@ -58,6 +59,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<AbilitySelectionCubit>(
           create: (context) => AbilitySelectionCubit(59),
+        ),
+        BlocProvider<AbilityBloc>(
+            create: (context) => AbilityBloc(),
         )
       ],
       child: MultiBlocListener(

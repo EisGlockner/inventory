@@ -32,7 +32,26 @@ class PlayerScreen extends StatelessWidget {
               future: DBHelper.instance.getSpielerStats(player.id!),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox.shrink();
+                  return SizedBox(
+                      height: _calculateGridViewHeight(
+                        8,
+                        MediaQuery.of(context).size.width < 900 ? 4 : 8,
+                      ),
+                    child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount:
+                        MediaQuery.of(context).size.width < 900 ? 4 : 8,
+                        childAspectRatio: 2,
+                      ),
+                      itemCount: 8,
+                      itemBuilder: (context, index) {
+                        final List<String> stats = [
+                          'MU', 'KL', 'IN', 'CH', 'FF', 'GE', 'KO', 'KK'
+                        ];
+                        return _buildStatInCard(stats[index], 0);
+                      },
+                    ),
+                  );
                 } else if (snapshot.hasError) {
                   return const Text('Fehler beim Laden der Daten');
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -52,16 +71,9 @@ class PlayerScreen extends StatelessWidget {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         final List<String> stats = [
-                          'MU',
-                          'KL',
-                          'IN',
-                          'CH',
-                          'FF',
-                          'GE',
-                          'KO',
-                          'KK'
+                          'MU', 'KL', 'IN', 'CH', 'FF', 'GE', 'KO', 'KK'
                         ];
-                        return _buildStatCard(
+                        return _buildStatInCard(
                             stats[index], snapshot.data![index].wert);
                       },
                     ),
@@ -82,9 +94,9 @@ class PlayerScreen extends StatelessWidget {
                 crossAxisCount: 3,
                 childAspectRatio: 2,
                 children: [
-                  _buildStatCard('SK', player.seelenkraft),
-                  _buildStatCard('ZK', player.zaehigkeit),
-                  _buildStatCard('SP', player.schicksalspunkte),
+                  _buildStatInCard('SK', player.seelenkraft),
+                  _buildStatInCard('ZK', player.zaehigkeit),
+                  _buildStatInCard('SP', player.schicksalspunkte),
                 ],
               ),
             ),
@@ -171,9 +183,7 @@ class PlayerScreen extends StatelessWidget {
                                 ),
                               );
                             });
-                      } else {
-                        return const Placeholder();
-                      }
+                      } else { return const Placeholder(); }
                     }),
               ),
             ),
@@ -188,7 +198,7 @@ class PlayerScreen extends StatelessWidget {
     return 50.0 * rowCount.toDouble();
   }
 
-  Widget _buildStatCard(String statName, int statValue) {
+  Widget _buildStatInCard(String statName, int statValue) {
     return Card(
       color: Colors.transparent,
       elevation: 0,
